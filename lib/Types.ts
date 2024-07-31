@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 import { JsonPathOps } from './JsonPathOps';
 
 export class Id {
@@ -361,6 +361,10 @@ export class PresentationDefinition {
       }
     };
 
+    /**
+     * Input descriptor groups, if present, should be
+     * referenced from submission groups
+     */
     const checkInputDescriptorGroups = () => {
       const allGroup =
         submissionRequirements?.flatMap((sr) => allGroups(sr)) || [];
@@ -400,10 +404,32 @@ export class DescriptorMap {
 }
 
 export class PresentationSubmission {
+  @Transform(({ value }) => new Id(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   id: Id;
   @Expose({ name: 'definition_id' })
+  @Transform(({ value }) => new Id(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   definitionId: Id;
   @Expose({ name: 'descriptor_map' })
+  // TODO Confirm whether to return undefined or throw an error when the value is undefined
+  @Transform(
+    ({ value }) =>
+      value.map(
+        (v: { id: string; format: string; path: string }) =>
+          new DescriptorMap(new Id(v.id), v.format, JsonPath.jsonPath(v.path)!)
+      ),
+    { toClassOnly: true }
+  )
+  @Transform(
+    ({ value }) =>
+      value.map((v: DescriptorMap) => ({
+        id: v.id.value,
+        format: v.format,
+        path: v.path.value,
+      })),
+    { toPlainOnly: true }
+  )
   descriptorMaps: DescriptorMap[];
 
   constructor(id: Id, definitionId: Id, descriptorMaps: DescriptorMap[]) {

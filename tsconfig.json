@@ -27,5 +27,6 @@
     "experimentalDecorators": true
   },
   // TODO remove mock from include
-  "include": ["lib"]
+  "include": ["lib"],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
 }
