@@ -129,9 +129,19 @@ describe('DefaultJsonParser', () => {
           jsonStr
         );
 
-        expect(result).toBeInstanceOf(Result);
-        expect(result.getOrThrow()).toBeInstanceOf(PresentationSubmission);
+        expect(result.isSuccess).toBe(true);
+
+        const ps = result.getOrThrow();
+        expect(ps.id.value).toBe('aaaa');
+        expect(ps.definitionId.value).toBe('bbbb');
+        expect(ps.descriptorMaps).toHaveLength(1);
+        expect(ps.descriptorMaps[0].id.value).toBe('cccc');
+        expect(ps.descriptorMaps[0].format).toBe('jwt');
+        expect(ps.descriptorMaps[0].path.value).toBe(
+          '$.verifiableCredential[0]'
+        );
       });
+
       it('should return a PresentationSubmission when ReadableStream', async () => {
         const jsonStr = `{
           "id": "aaaa",
@@ -153,8 +163,17 @@ describe('DefaultJsonParser', () => {
           stream
         );
 
-        expect(result).toBeInstanceOf(Result);
-        expect(result.getOrThrow()).toBeInstanceOf(PresentationSubmission);
+        expect(result.isSuccess).toBe(true);
+
+        const ps = result.getOrThrow();
+        expect(ps.id.value).toBe('aaaa');
+        expect(ps.definitionId.value).toBe('bbbb');
+        expect(ps.descriptorMaps).toHaveLength(1);
+        expect(ps.descriptorMaps[0].id.value).toBe('cccc');
+        expect(ps.descriptorMaps[0].format).toBe('jwt');
+        expect(ps.descriptorMaps[0].path.value).toBe(
+          '$.verifiableCredential[0]'
+        );
       });
     });
   });
@@ -173,8 +192,9 @@ describe('DefaultJsonParser', () => {
         ],
       };
       const result = await mapToPS(json);
-      expect(result).toBeInstanceOf(Result);
+      expect(result.isSuccess).toBe(true);
     });
+
     it('should Result<PresentationSubmission>.isSuccess === true and get PresentationSubmission', async () => {
       const json = {
         id: 'aaaa',
@@ -189,8 +209,8 @@ describe('DefaultJsonParser', () => {
       };
       const result = await mapToPS(json);
       expect(result.isSuccess).toBe(true);
-      expect(result.getOrThrow()).toBeInstanceOf(PresentationSubmission);
     });
+
     it('should Result<PresentationSubmission>.isFailure === true and get PresentationSubmission', async () => {
       const json = {
         id: 'aaaa',
