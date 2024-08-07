@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Expose, Transform } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 import { JsonPathOps } from './JsonPathOps';
 
 export class Id {
@@ -78,17 +78,45 @@ export class Filter {
  */
 export class FieldConstraint {
   @Expose({ name: 'path' })
-  paths: NonEmptySet<JsonPath>;
+  //@Type(() => JsonPath)
+  @Transform(({ value }) => value.map((v: string) => JsonPath.jsonPath(v)), {
+    toClassOnly: true,
+  })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  paths?: NonEmptySet<JsonPath>;
+
+  @Transform(({ value }) => new Id(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   id?: Id;
+
+  @Transform(({ value }) => new Name(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   name?: Name;
+
+  @Transform(({ value }) => new Purpose(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   purpose?: Purpose;
+
+  @Transform(({ value }) => Filter.filter(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   filter?: Filter;
-  optional: boolean = false;
+  optional?: boolean;
+
   @Expose({ name: 'intent_to_retain' })
   intentToRetain?: boolean;
 
+  constructor();
   constructor(
     paths: NonEmptySet<JsonPath>,
+    id?: Id,
+    name?: Name,
+    purpose?: Purpose,
+    filter?: Filter,
+    optional?: boolean,
+    intentToRetain?: boolean
+  );
+  constructor(
+    paths?: NonEmptySet<JsonPath>,
     id?: Id,
     name?: Name,
     purpose?: Purpose,
@@ -106,7 +134,20 @@ export class FieldConstraint {
   }
 }
 
+// export class Constraints {
+//   fields: FieldConstraint[] = [];
+
+//   constructor() {}
+// }
+
 export interface Constraints {}
+
+export class FieldsConstraints implements Constraints {
+  @Type(() => FieldConstraint)
+  fields: NonEmptySet<FieldConstraint> = [];
+
+  constructor() {}
+}
 
 export namespace Constraints {
   export const fields = (instance: Constraints): FieldConstraint[] => {
@@ -281,14 +322,29 @@ export class InputDescriptorId {
  * and an [explanation][Purpose] why a certain item or set of data is being requested
  */
 export class InputDescriptor {
-  id: InputDescriptorId;
+  @Transform(({ value }) => new InputDescriptorId(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  id?: InputDescriptorId;
+
+  @Transform(({ value }) => new Name(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   name?: Name;
+
+  @Transform(({ value }) => new Purpose(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   purpose?: Purpose;
+
+  @Transform(({ value }) => Format.format(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   format?: Format;
-  constraints: Constraints;
+
+  @Type(() => FieldsConstraints)
+  constraints?: FieldsConstraints;
+
   @Expose({ name: 'group' })
   groups?: Group[];
 
+  constructor();
   constructor(
     id: InputDescriptorId,
     name: Name | undefined,
@@ -296,6 +352,14 @@ export class InputDescriptor {
     format: Format | undefined,
     constraints: Constraints,
     groups: Group[] | undefined
+  );
+  constructor(
+    id?: InputDescriptorId,
+    name?: Name | undefined,
+    purpose?: Purpose | undefined,
+    format?: Format | undefined,
+    constraints?: Constraints,
+    groups?: Group[] | undefined
   ) {
     this.id = id;
     this.name = name;
@@ -322,15 +386,30 @@ export class InputDescriptor {
  *
  */
 export class PresentationDefinition {
-  id: Id;
+  @Transform(({ value }) => new Id(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  id?: Id;
+
+  @Transform(({ value }) => new Name(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   name?: Name;
+
+  @Transform(({ value }) => new Purpose(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   purpose?: Purpose;
+
+  @Transform(({ value }) => Format.format(value), { toClassOnly: true })
+  @Transform(({ value }) => value.value, { toPlainOnly: true })
   format?: Format;
+
+  @Type(() => InputDescriptor)
   @Expose({ name: 'input_descriptors' })
-  inputDescriptors: InputDescriptor[];
+  inputDescriptors?: InputDescriptor[];
+
   @Expose({ name: 'submission_requirements' })
   submissionRequirements?: SubmissionRequirement[];
 
+  constructor();
   constructor(
     id: Id,
     name: Name | undefined,
@@ -338,6 +417,14 @@ export class PresentationDefinition {
     format: Format | undefined,
     inputDescriptors: InputDescriptor[],
     submissionRequirements: SubmissionRequirement[] | undefined
+  );
+  constructor(
+    id?: Id,
+    name?: Name | undefined,
+    purpose?: Purpose | undefined,
+    format?: Format | undefined,
+    inputDescriptors?: InputDescriptor[],
+    submissionRequirements?: SubmissionRequirement[] | undefined
   ) {
     this.id = id;
     this.inputDescriptors = inputDescriptors;
@@ -350,11 +437,15 @@ export class PresentationDefinition {
      * Make sure that InputDescriptor Ids are unique
      */
     const checkInputDescriptorIds = () => {
+      if (!inputDescriptors) {
+        return;
+      }
+
       const distinct = new Set();
-      inputDescriptors.forEach((inputDescriptor) => {
+      inputDescriptors?.forEach((inputDescriptor) => {
         distinct.add(inputDescriptor.id);
       });
-      if (distinct.size !== inputDescriptors.length) {
+      if (distinct.size !== inputDescriptors?.length) {
         throw new Error(
           'InputDescriptor(s) should have PresentationDefinition unique ids'
         );
@@ -366,10 +457,14 @@ export class PresentationDefinition {
      * referenced from submission groups
      */
     const checkInputDescriptorGroups = () => {
+      if (!submissionRequirements) {
+        return;
+      }
+
       const allGroup =
         submissionRequirements?.flatMap((sr) => allGroups(sr)) || [];
 
-      inputDescriptors.forEach((inputDescriptor) => {
+      inputDescriptors?.forEach((inputDescriptor) => {
         inputDescriptor.groups?.forEach((grp) => {
           for (const g of allGroup.values()) {
             for (const v of g) {

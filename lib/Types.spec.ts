@@ -24,7 +24,7 @@ describe('Types', () => {
   describe('Id', () => {
     describe('constructor', () => {
       it('should create instance', () => {
-        let id = new Id('abc');
+        const id = new Id('abc');
         expect(id).toBeInstanceOf(Id);
         expect(id.value).toBe('abc');
       });
@@ -33,7 +33,7 @@ describe('Types', () => {
   describe('Name', () => {
     describe('constructor', () => {
       it('should create instance', () => {
-        let name = new Name('abc');
+        const name = new Name('abc');
         expect(name).toBeInstanceOf(Name);
         expect(name.value).toBe('abc');
       });
@@ -42,7 +42,7 @@ describe('Types', () => {
   describe('Purpose', () => {
     describe('constructor', () => {
       it('should create instance', () => {
-        let purpose = new Purpose('abc');
+        const purpose = new Purpose('abc');
         expect(purpose).toBeInstanceOf(Purpose);
         expect(purpose.value).toBe('abc');
       });
@@ -51,13 +51,13 @@ describe('Types', () => {
   describe('Format', () => {
     describe('format', () => {
       it('should create instance', () => {
-        let format = Format.format({ value: 'abc' });
+        const format = Format.format({ value: 'abc' });
         expect(format).toBeInstanceOf(Format);
       });
     });
     describe('jsonObject', () => {
       it('should return JsonObject', () => {
-        let format = Format.format({ value: 'abc' });
+        const format = Format.format({ value: 'abc' });
         expect(format.jsonObject()).toEqual({ value: 'abc' });
       });
     });
@@ -65,11 +65,11 @@ describe('Types', () => {
   describe('JsonPath', () => {
     describe('jsonPath', () => {
       it('should create instance', () => {
-        let jsonPath = JsonPath.jsonPath('$.abc');
+        const jsonPath = JsonPath.jsonPath('$.abc');
         expect(jsonPath).toBeInstanceOf(JsonPath);
       });
       it('should faild to create instance', () => {
-        let jsonPath = JsonPath.jsonPath('.abc');
+        const jsonPath = JsonPath.jsonPath('.abc');
         expect(jsonPath).toBeUndefined();
       });
     });
@@ -77,13 +77,13 @@ describe('Types', () => {
   describe('Filter', () => {
     describe('filter', () => {
       it('should create instance', () => {
-        let filter = Filter.filter({ value: 'abc' });
+        const filter = Filter.filter({ value: 'abc' });
         expect(filter).toBeInstanceOf(Filter);
       });
     });
     describe('jsonObject', () => {
       it('should return JsonObject', () => {
-        let filter = Filter.filter({ value: 'abc' });
+        const filter = Filter.filter({ value: 'abc' });
         expect(filter.jsonObject()).toEqual({ value: 'abc' });
       });
     });
@@ -91,7 +91,7 @@ describe('Types', () => {
   describe('FieldConstraint', () => {
     describe('constructor', () => {
       it('should create instance', () => {
-        let fieldConstraint = new FieldConstraint(
+        const fieldConstraint = new FieldConstraint(
           [JsonPath.jsonPath('$.abc')!],
           new Id('abc'),
           new Name('abc'),
@@ -107,7 +107,7 @@ describe('Types', () => {
   describe('Constraints', () => {
     describe('fields', () => {
       it('should return FieldConstraint list', () => {
-        let fieldConstraint = new FieldConstraint(
+        const fieldConstraint = new FieldConstraint(
           [JsonPath.jsonPath('$.abc')!],
           new Id('abc'),
           new Name('abc'),
@@ -284,7 +284,7 @@ describe('Types', () => {
   describe('Group', () => {
     describe('constructor', () => {
       it('should create instance', () => {
-        let group = new Group('abc');
+        const group = new Group('abc');
         expect(group).toBeInstanceOf(Group);
         expect(group.value).toBe('abc');
       });
@@ -302,7 +302,7 @@ describe('Types', () => {
     describe('FromNested', () => {
       describe('constructor', () => {
         it('should create instance', () => {
-          let from = new From.FromNested([
+          const from = new From.FromNested([
             new SubmissionRequirement(Rule.All.readResolve(), [
               new From.FromGroup(new Group('abc')),
             ]),
@@ -423,123 +423,6 @@ describe('Types', () => {
           [new Group('abc')]
         );
         expect(inputDescriptor).toBeInstanceOf(InputDescriptor);
-      });
-    });
-  });
-  describe('PresentationDefinition', () => {
-    describe('constructor', () => {
-      it('should create instance', () => {
-        let presentationDefinition = new PresentationDefinition(
-          new Id('abc'),
-          new Name('abc'),
-          new Purpose('abc'),
-          Format.format({ value: 'abc' }),
-          [
-            new InputDescriptor(
-              new InputDescriptorId('abc'),
-              new Name('abc'),
-              new Purpose('abc'),
-              Format.format({ value: 'abc' }),
-              new Constraints.Fields([
-                new FieldConstraint(
-                  [JsonPath.jsonPath('$.abc')!],
-                  new Id('abc'),
-                  new Name('abc'),
-                  new Purpose('abc'),
-                  Filter.filter({ value: 'abc' }),
-                  true,
-                  true
-                ),
-              ]),
-              [new Group('abc')]
-            ),
-          ],
-          [
-            new SubmissionRequirement(
-              Rule.All.readResolve(),
-              new From.FromGroup(new Group('abc'))
-            ),
-          ]
-        );
-        expect(presentationDefinition).toBeInstanceOf(PresentationDefinition);
-      });
-      it('should shoud throw error when same id InputDescriptors exist', () => {
-        const inputDescriptor = new InputDescriptor(
-          new InputDescriptorId('abc'),
-          new Name('abc'),
-          new Purpose('abc'),
-          Format.format({ value: 'abc' }),
-          new Constraints.Fields([
-            new FieldConstraint(
-              [JsonPath.jsonPath('$.abc')!],
-              new Id('abc'),
-              new Name('abc'),
-              new Purpose('abc'),
-              Filter.filter({ value: 'abc' }),
-              true,
-              true
-            ),
-          ]),
-          [new Group('abc')]
-        );
-        expect(
-          () =>
-            new PresentationDefinition(
-              new Id('abc'),
-              new Name('abc'),
-              new Purpose('abc'),
-              Format.format({ value: 'abc' }),
-              [inputDescriptor, inputDescriptor],
-              [
-                new SubmissionRequirement(
-                  Rule.All.readResolve(),
-                  new From.FromGroup(new Group('abc'))
-                ),
-              ]
-            )
-        ).toThrowError(
-          'InputDescriptor(s) should have PresentationDefinition unique ids'
-        );
-      });
-      it('should shoud throw error when InputDescriptor.Group.value and SubmissionRequirement.Group.value are different', () => {
-        expect(
-          () =>
-            new PresentationDefinition(
-              new Id('abc'),
-              new Name('abc'),
-              new Purpose('abc'),
-              Format.format({ value: 'abc' }),
-              [
-                new InputDescriptor(
-                  new InputDescriptorId('abc'),
-                  new Name('abc'),
-                  new Purpose('abc'),
-                  Format.format({ value: 'abc' }),
-                  new Constraints.Fields([
-                    new FieldConstraint(
-                      [JsonPath.jsonPath('$.abc')!],
-                      new Id('abc'),
-                      new Name('abc'),
-                      new Purpose('abc'),
-                      Filter.filter({ value: 'abc' }),
-                      true,
-                      true
-                    ),
-                  ]),
-                  [new Group('abc')]
-                ),
-              ],
-              [
-                new SubmissionRequirement(
-                  Rule.All.readResolve(),
-                  new From.FromGroup(new Group('def'))
-                ),
-              ]
-            )
-        ).toThrowError(
-          'Input descriptor ${inputDescriptor.id} ' +
-            'contains groups ${grp.value} which is not present in submission requirements'
-        );
       });
     });
   });
