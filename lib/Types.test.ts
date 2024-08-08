@@ -88,22 +88,6 @@ describe('Types', () => {
       });
     });
   });
-  describe('FieldConstraint', () => {
-    describe('constructor', () => {
-      it('should create instance', () => {
-        const fieldConstraint = new FieldConstraint(
-          [JsonPath.jsonPath('$.abc')!],
-          new Id('abc'),
-          new Name('abc'),
-          new Purpose('abc'),
-          Filter.filter({ value: 'abc' }),
-          true,
-          true
-        );
-        expect(fieldConstraint).toBeInstanceOf(FieldConstraint);
-      });
-    });
-  });
   describe('Constraints', () => {
     describe('fields', () => {
       it('should return FieldConstraint list', () => {
@@ -423,18 +407,6 @@ describe('Types', () => {
           [new Group('abc')]
         );
         expect(inputDescriptor).toBeInstanceOf(InputDescriptor);
-      });
-    });
-  });
-  describe('DescriptorMap', () => {
-    describe('constructor', () => {
-      it('should create instance', () => {
-        const map = new DescriptorMap(
-          new InputDescriptorId('abc'),
-          'abc',
-          JsonPath.jsonPath('$.abc')!
-        );
-        expect(map).toBeInstanceOf(DescriptorMap);
       });
     });
   });

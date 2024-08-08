@@ -82,7 +82,9 @@ export class FieldConstraint {
   @Transform(({ value }) => value.map((v: string) => JsonPath.jsonPath(v)), {
     toClassOnly: true,
   })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Transform(({ value }) => value.map((v: JsonPath) => v.value), {
+    toPlainOnly: true,
+  })
   paths?: NonEmptySet<JsonPath>;
 
   @Transform(({ value }) => new Id(value), { toClassOnly: true })
@@ -98,8 +100,9 @@ export class FieldConstraint {
   purpose?: Purpose;
 
   @Transform(({ value }) => Filter.filter(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Transform(({ value }) => value.jsonObject(), { toPlainOnly: true })
   filter?: Filter;
+
   optional?: boolean;
 
   @Expose({ name: 'intent_to_retain' })
@@ -121,7 +124,7 @@ export class FieldConstraint {
     name?: Name,
     purpose?: Purpose,
     filter?: Filter,
-    optional: boolean = false,
+    optional?: boolean,
     intentToRetain?: boolean
   ) {
     this.paths = paths;
@@ -486,48 +489,90 @@ export class PresentationDefinition {
   }
 }
 
-export class DescriptorMap {
-  id: InputDescriptorId;
-  format: string;
-  path: JsonPath;
+export class PathNested {
+  format?: string;
 
-  constructor(id: InputDescriptorId, format: string, path: JsonPath) {
-    this.id = id;
+  @Transform(({ value }) => JsonPath.jsonPath(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
+  path?: JsonPath;
+
+  constructor();
+  constructor(format: string, path: JsonPath);
+  constructor(format?: string, path?: JsonPath) {
     this.format = format;
     this.path = path;
   }
 }
 
+export class DescriptorMap {
+  @Transform(({ value }) => new InputDescriptorId(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
+  id?: InputDescriptorId;
+
+  format?: string;
+
+  @Transform(({ value }) => JsonPath.jsonPath(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
+  path?: JsonPath;
+
+  @Expose({ name: 'path_nested' })
+  @Type(() => PathNested)
+  pathNested?: PathNested;
+
+  constructor();
+  constructor(
+    id: InputDescriptorId,
+    format?: string,
+    path?: JsonPath,
+    pathNested?: PathNested
+  );
+  constructor(
+    id?: InputDescriptorId,
+    format?: string,
+    path?: JsonPath,
+    pathNested?: PathNested
+  ) {
+    this.id = id;
+    this.format = format;
+    this.path = path;
+    this.pathNested = pathNested;
+  }
+}
+
 export class PresentationSubmission {
   @Transform(({ value }) => new Id(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
-  id: Id;
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
+  id?: Id;
+
   @Expose({ name: 'definition_id' })
   @Transform(({ value }) => new Id(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
-  definitionId: Id;
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
+  definitionId?: Id;
+
   @Expose({ name: 'descriptor_map' })
   // TODO Confirm whether to return undefined or throw an error when the value is undefined
-  @Transform(
-    ({ value }) =>
-      value.map(
-        (v: { id: string; format: string; path: string }) =>
-          new DescriptorMap(new Id(v.id), v.format, JsonPath.jsonPath(v.path)!)
-      ),
-    { toClassOnly: true }
-  )
-  @Transform(
-    ({ value }) =>
-      value.map((v: DescriptorMap) => ({
-        id: v.id.value,
-        format: v.format,
-        path: v.path.value,
-      })),
-    { toPlainOnly: true }
-  )
-  descriptorMaps: DescriptorMap[];
+  // @Transform(
+  //   ({ value }) =>
+  //     value.map(
+  //       (v: { id: string; format: string; path: string }) =>
+  //         new DescriptorMap(new Id(v.id), v.format, JsonPath.jsonPath(v.path)!)
+  //     ),
+  //   { toClassOnly: true }
+  // )
+  // @Transform(
+  //   ({ value }) =>
+  //     value?.map((v: DescriptorMap) => ({
+  //       id: v.id?.value,
+  //       format: v.format,
+  //       path: v.path?.value,
+  //     })),
+  //   { toPlainOnly: true }
+  // )
+  @Type(() => DescriptorMap)
+  descriptorMaps?: DescriptorMap[];
 
-  constructor(id: Id, definitionId: Id, descriptorMaps: DescriptorMap[]) {
+  constructor(id: Id, definitionId: Id, descriptorMaps: DescriptorMap[]);
+  constructor(id?: Id, definitionId?: Id, descriptorMaps?: DescriptorMap[]) {
     this.id = id;
     this.definitionId = definitionId;
     this.descriptorMaps = descriptorMaps;
