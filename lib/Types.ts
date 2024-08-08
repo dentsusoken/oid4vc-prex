@@ -339,7 +339,7 @@ export class InputDescriptor {
   format?: Format;
 
   @Type(() => FieldsConstraints)
-  constraints?: FieldsConstraints;
+  constraints?: Constraints;
 
   @Expose({ name: 'group' })
   groups?: Group[];

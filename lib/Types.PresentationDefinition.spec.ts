@@ -224,10 +224,11 @@ describe('Types', () => {
         expect(instance.purpose?.value).toBe(plain.purpose);
         expect(instance.format).toBeInstanceOf(Format);
         expect(instance.format?.json).toBe(JSON.stringify(plain.format));
-        console.log(instance.constraints);
+        //console.log(instance.constraints);
         expect(instance.constraints).toBeInstanceOf(FieldsConstraints);
-        expect(instance.constraints!.fields.length).toBe(2);
-        expect(instance.constraints!.fields[0]).toBeInstanceOf(FieldConstraint);
+        const constraints = instance.constraints as FieldsConstraints;
+        expect(constraints.fields.length).toBe(2);
+        expect(constraints.fields[0]).toBeInstanceOf(FieldConstraint);
       });
     });
   });

@@ -1,11 +1,10 @@
+import 'reflect-metadata';
 import { describe, expect, it } from 'vitest';
 import {
   DefaultJsonParser,
   PresentationSubmissionEmbedLocation,
   mapToPS,
 } from './DefaultJsonParser';
-import { PresentationSubmission } from '../Types';
-import { Result } from '../kotlin';
 
 describe('DefaultJsonParser', () => {
   describe('PresentationSubmissionEmbedLocation', () => {

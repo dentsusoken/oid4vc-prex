@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import {
   Constraints,
@@ -12,7 +13,6 @@ import {
   InputDescriptorId,
   JsonPath,
   Name,
-  PresentationDefinition,
   PresentationSubmission,
   Purpose,
   Rule,
