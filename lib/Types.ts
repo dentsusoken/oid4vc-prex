@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Expose, Transform, Type } from 'class-transformer';
+import { Expose, Transform, Type, instanceToPlain } from 'class-transformer';
 import { JsonPathOps } from './JsonPathOps';
 
 export class Id {
   constructor(public value: string) {}
 }
+
 export class Name {
   constructor(public value: string) {}
 }
+
 export class Purpose {
   constructor(public value: string) {}
 }
@@ -79,30 +81,37 @@ export class Filter {
 export class FieldConstraint {
   @Expose({ name: 'path' })
   //@Type(() => JsonPath)
-  @Transform(({ value }) => value.map((v: string) => JsonPath.jsonPath(v)), {
+  @Transform(({ value }) => value?.map((v: string) => JsonPath.jsonPath(v)), {
     toClassOnly: true,
   })
-  @Transform(({ value }) => value.map((v: JsonPath) => v.value), {
+  @Transform(({ value }) => value?.map((v: JsonPath) => v.value), {
     toPlainOnly: true,
   })
   paths?: NonEmptySet<JsonPath>;
 
-  @Transform(({ value }) => new Id(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new Id(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   id?: Id;
 
-  @Transform(({ value }) => new Name(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new Name(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   name?: Name;
 
-  @Transform(({ value }) => new Purpose(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new Purpose(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   purpose?: Purpose;
 
-  @Transform(({ value }) => Filter.filter(value), { toClassOnly: true })
-  @Transform(({ value }) => value.jsonObject(), { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && Filter.filter(value), {
+    toClassOnly: true,
+  })
+  @Transform(({ value }) => value?.jsonObject(), { toPlainOnly: true })
   filter?: Filter;
 
+  @Expose()
   optional?: boolean;
 
   @Expose({ name: 'intent_to_retain' })
@@ -146,6 +155,7 @@ export class FieldConstraint {
 export interface Constraints {}
 
 export class FieldsConstraints implements Constraints {
+  @Expose()
   @Type(() => FieldConstraint)
   fields: NonEmptySet<FieldConstraint> = [];
 
@@ -325,22 +335,31 @@ export class InputDescriptorId {
  * and an [explanation][Purpose] why a certain item or set of data is being requested
  */
 export class InputDescriptor {
-  @Transform(({ value }) => new InputDescriptorId(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new InputDescriptorId(value), {
+    toClassOnly: true,
+  })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   id?: InputDescriptorId;
 
-  @Transform(({ value }) => new Name(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new Name(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   name?: Name;
 
-  @Transform(({ value }) => new Purpose(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new Purpose(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   purpose?: Purpose;
 
-  @Transform(({ value }) => Format.format(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && Format.format(value), {
+    toClassOnly: true,
+  })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   format?: Format;
 
+  @Expose()
   @Type(() => FieldsConstraints)
   constraints?: Constraints;
 
@@ -389,24 +408,30 @@ export class InputDescriptor {
  *
  */
 export class PresentationDefinition {
-  @Transform(({ value }) => new Id(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new Id(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   id?: Id;
 
-  @Transform(({ value }) => new Name(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new Name(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   name?: Name;
 
-  @Transform(({ value }) => new Purpose(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new Purpose(value), { toClassOnly: true })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   purpose?: Purpose;
 
-  @Transform(({ value }) => Format.format(value), { toClassOnly: true })
-  @Transform(({ value }) => value.value, { toPlainOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && Format.format(value), {
+    toClassOnly: true,
+  })
+  @Transform(({ value }) => value?.value, { toPlainOnly: true })
   format?: Format;
 
-  @Type(() => InputDescriptor)
   @Expose({ name: 'input_descriptors' })
+  @Type(() => InputDescriptor)
   inputDescriptors?: InputDescriptor[];
 
   @Expose({ name: 'submission_requirements' })
@@ -490,9 +515,13 @@ export class PresentationDefinition {
 }
 
 export class PathNested {
+  @Expose()
   format?: string;
 
-  @Transform(({ value }) => JsonPath.jsonPath(value), { toClassOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && JsonPath.jsonPath(value), {
+    toClassOnly: true,
+  })
   @Transform(({ value }) => value?.value, { toPlainOnly: true })
   path?: JsonPath;
 
@@ -504,14 +533,22 @@ export class PathNested {
   }
 }
 
+@Expose()
 export class DescriptorMap {
-  @Transform(({ value }) => new InputDescriptorId(value), { toClassOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new InputDescriptorId(value), {
+    toClassOnly: true,
+  })
   @Transform(({ value }) => value?.value, { toPlainOnly: true })
   id?: InputDescriptorId;
 
+  @Expose()
   format?: string;
 
-  @Transform(({ value }) => JsonPath.jsonPath(value), { toClassOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && JsonPath.jsonPath(value), {
+    toClassOnly: true,
+  })
   @Transform(({ value }) => value?.value, { toPlainOnly: true })
   path?: JsonPath;
 
@@ -539,36 +576,28 @@ export class DescriptorMap {
   }
 }
 
+@Expose()
 export class PresentationSubmission {
-  @Transform(({ value }) => new Id(value), { toClassOnly: true })
+  @Expose()
+  @Transform(({ value }) => value && new Id(value), { toClassOnly: true })
   @Transform(({ value }) => value?.value, { toPlainOnly: true })
   id?: Id;
 
   @Expose({ name: 'definition_id' })
-  @Transform(({ value }) => new Id(value), { toClassOnly: true })
+  @Transform(({ value }) => value && new Id(value), { toClassOnly: true })
   @Transform(({ value }) => value?.value, { toPlainOnly: true })
   definitionId?: Id;
 
   @Expose({ name: 'descriptor_map' })
-  // TODO Confirm whether to return undefined or throw an error when the value is undefined
-  // @Transform(
-  //   ({ value }) =>
-  //     value.map(
-  //       (v: { id: string; format: string; path: string }) =>
-  //         new DescriptorMap(new Id(v.id), v.format, JsonPath.jsonPath(v.path)!)
-  //     ),
-  //   { toClassOnly: true }
-  // )
-  // @Transform(
-  //   ({ value }) =>
-  //     value?.map((v: DescriptorMap) => ({
-  //       id: v.id?.value,
-  //       format: v.format,
-  //       path: v.path?.value,
-  //     })),
-  //   { toPlainOnly: true }
-  // )
   @Type(() => DescriptorMap)
+  @Transform(
+    ({ value }) =>
+      value &&
+      value.map((v: DescriptorMap) =>
+        instanceToPlain(v, { excludeExtraneousValues: true })
+      ),
+    { toPlainOnly: true }
+  )
   descriptorMaps?: DescriptorMap[];
 
   constructor(id: Id, definitionId: Id, descriptorMaps: DescriptorMap[]);

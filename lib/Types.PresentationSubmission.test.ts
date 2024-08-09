@@ -8,6 +8,7 @@ import {
   JsonPath,
   InputDescriptorId,
 } from './Types';
+import { Nested } from './Types.PresentationSubmission.test.types';
 
 describe('PresentationSubmission', () => {
   describe('plainToInstance', () => {
@@ -101,6 +102,49 @@ describe('PresentationSubmission', () => {
           },
         ],
       });
+    });
+
+    it('should correctly transform plain object to Nested instance', () => {
+      const plain = {
+        presentation_submission: {
+          id: 'submission1',
+          definition_id: 'def1',
+          descriptor_map: [
+            {
+              id: 'desc1',
+              format: 'json',
+              path: '$.data.value',
+            },
+          ],
+        },
+      };
+
+      const nested = plainToInstance(Nested, plain, {
+        excludeExtraneousValues: true,
+      });
+
+      expect(nested).toBeInstanceOf(Nested);
+      expect(nested.presentationSubmission).toBeInstanceOf(
+        PresentationSubmission
+      );
+
+      expect(nested.presentationSubmission?.id).toBeInstanceOf(Id);
+      expect(nested.presentationSubmission?.id?.value).toBe('submission1');
+      expect(nested.presentationSubmission?.definitionId).toBeInstanceOf(Id);
+      expect(nested.presentationSubmission?.definitionId?.value).toBe('def1');
+      expect(nested.presentationSubmission?.descriptorMaps).toHaveLength(1);
+      expect(nested.presentationSubmission?.descriptorMaps?.[0]).toBeInstanceOf(
+        DescriptorMap
+      );
+      expect(nested.presentationSubmission?.descriptorMaps?.[0].id?.value).toBe(
+        'desc1'
+      );
+      expect(nested.presentationSubmission?.descriptorMaps?.[0].format).toBe(
+        'json'
+      );
+      expect(
+        nested.presentationSubmission?.descriptorMaps?.[0].path?.value
+      ).toBe('$.data.value');
     });
 
     it('should handle empty descriptor_map', () => {

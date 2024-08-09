@@ -39,6 +39,7 @@ describe('DescriptorMap', () => {
       const plain = {};
 
       const instance = plainToInstance(DescriptorMap, plain);
+      console.log(instance);
 
       expect(instance).toBeInstanceOf(DescriptorMap);
       expect(instance.id).toBeUndefined();
