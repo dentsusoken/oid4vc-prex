@@ -100,7 +100,7 @@ export const mapToPS = async (
 
     return plainToInstance(
       PresentationSubmission,
-      pdObject as Record<string, any>
+      pdObject as Record<string, unknown>
     );
   });
 };

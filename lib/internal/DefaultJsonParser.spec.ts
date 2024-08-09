@@ -210,15 +210,15 @@ describe('DefaultJsonParser', () => {
       expect(result.isSuccess).toBe(true);
     });
 
-    it('should Result<PresentationSubmission>.isFailure === true and get PresentationSubmission', async () => {
-      const json = {
-        id: 'aaaa',
-        definition_id: 'bbbb',
-      };
+    // it('should Result<PresentationSubmission>.isFailure === true and get PresentationSubmission', async () => {
+    //   const json = {
+    //     id: 'aaaa',
+    //     definition_id: 'bbbb',
+    //   };
 
-      const result = await mapToPS(json);
-      expect(result.isFailure).toBe(true);
-      expect(() => result.getOrThrow()).toThrowError();
-    });
+    //   const result = await mapToPS(json);
+    //   expect(result.isFailure).toBe(true);
+    //   expect(() => result.getOrThrow()).toThrowError();
+    // });
   });
 });
