@@ -185,6 +185,126 @@ describe('Types', () => {
         expect(instance.format?.json).toBe(JSON.stringify(plain.format));
       });
     });
+    describe('serialize', () => {
+      it('should deserialize the instance', () => {
+        const presentationDefinition = new PresentationDefinition(
+          new Id('abc'),
+          new Name('abc'),
+          new Purpose('abc'),
+          Format.format({ value: 'abc' }),
+          [
+            new InputDescriptor(
+              new InputDescriptorId('abc'),
+              new Name('abc'),
+              new Purpose('abc'),
+              Format.format({ value: 'abc' }),
+              new Constraints.Fields([
+                new FieldConstraint(
+                  [JsonPath.jsonPath('$.abc')!],
+                  new Id('abc'),
+                  new Name('abc'),
+                  new Purpose('abc'),
+                  Filter.filter({ value: 'abc' }),
+                  true,
+                  true
+                ),
+              ]),
+              [new Group('abc')]
+            ),
+          ],
+          [
+            new SubmissionRequirement(
+              Rule.All.readResolve(),
+              new From.FromGroup(new Group('abc'))
+            ),
+          ]
+        );
+
+        const plain = presentationDefinition.serialize();
+
+        expect(plain).toEqual({
+          id: 'abc',
+          name: 'abc',
+          purpose: 'abc',
+          format: '{"value":"abc"}',
+          input_descriptors: [
+            {
+              id: 'abc',
+              name: 'abc',
+              purpose: 'abc',
+              format: '{"value":"abc"}',
+              constraints: {
+                fieldConstraints: [
+                  {
+                    id: 'abc',
+                    name: 'abc',
+                    purpose: 'abc',
+                    path: ['$.abc'],
+                    filter: { value: 'abc' },
+                    optional: true,
+                    intent_to_retain: true,
+                  },
+                ],
+              },
+              group: ['abc'],
+            },
+          ],
+          submission_requirements: [
+            new SubmissionRequirement(
+              Rule.All.readResolve(),
+              new From.FromGroup(new Group('abc'))
+            ),
+          ],
+        });
+      });
+    });
+    describe('deserialize', () => {
+      it('should translate a plain object into self instance', () => {
+        const plain = {
+          id: 'abc',
+          name: 'xyz',
+          purpose: 'trip',
+          format: {},
+          input_descriptors: [
+            {
+              id: 'federationExample',
+              purpose:
+                'To pick a UK university that is a member of the UK academic federation',
+              constraints: {
+                fields: [
+                  {
+                    path: ['$.termsOfUse.type'],
+                    filter: {
+                      type: 'string',
+                      const: 'https://train.trust-scheme.de/info',
+                    },
+                  },
+                  {
+                    path: ['$.termsOfUse.federations'],
+                    filter: {
+                      type: 'string',
+                      const: 'ukuniversities.ac.uk',
+                    },
+                  },
+                ],
+              },
+              group: ['abc'],
+            },
+          ],
+        };
+        const instance = PresentationDefinition.deserialize(plain);
+
+        expect(instance).toBeInstanceOf(PresentationDefinition);
+        expect(instance.id).toBeInstanceOf(Id);
+        expect(instance.id?.value).toBe(plain.id);
+        expect(instance.name).toBeInstanceOf(Name);
+        expect(instance.name?.value).toBe(plain.name);
+        expect(instance.purpose).toBeInstanceOf(Purpose);
+        expect(instance.purpose?.value).toBe(plain.purpose);
+        expect(instance.format).toBeInstanceOf(Format);
+        expect(instance.format?.json).toBe(JSON.stringify(plain.format));
+      });
+    });
   });
 
   describe('InputDescriptor', () => {

@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Expose, Transform, Type, instanceToPlain } from 'class-transformer';
+import {
+  Expose,
+  Transform,
+  Type,
+  instanceToPlain,
+  plainToInstance,
+} from 'class-transformer';
 import { JsonPathOps } from './JsonPathOps';
 
 export class Id {
@@ -356,7 +362,7 @@ export class InputDescriptor {
   @Transform(({ value }) => value && Format.format(value), {
     toClassOnly: true,
   })
-  @Transform(({ value }) => value?.value, { toPlainOnly: true })
+  @Transform(({ value }) => value?.json, { toPlainOnly: true })
   format?: Format;
 
   @Expose()
@@ -364,6 +370,12 @@ export class InputDescriptor {
   constraints?: Constraints;
 
   @Expose({ name: 'group' })
+  @Transform(({ value }) => value?.map((v: string) => new Group(v)), {
+    toClassOnly: true,
+  })
+  @Transform(({ value }) => value?.map((v: Group) => v.value), {
+    toPlainOnly: true,
+  })
   groups?: Group[];
 
   constructor();
@@ -427,7 +439,7 @@ export class PresentationDefinition {
   @Transform(({ value }) => value && Format.format(value), {
     toClassOnly: true,
   })
-  @Transform(({ value }) => value?.value, { toPlainOnly: true })
+  @Transform(({ value }) => value?.json, { toPlainOnly: true })
   format?: Format;
 
   @Expose({ name: 'input_descriptors' })
@@ -512,6 +524,14 @@ export class PresentationDefinition {
     checkInputDescriptorIds();
     checkInputDescriptorGroups();
   }
+
+  serialize() {
+    return instanceToPlain(this);
+  }
+
+  static deserialize(json: unknown) {
+    return plainToInstance(this, json);
+  }
 }
 
 export class PathNested {
@@ -590,14 +610,14 @@ export class PresentationSubmission {
 
   @Expose({ name: 'descriptor_map' })
   @Type(() => DescriptorMap)
-  @Transform(
-    ({ value }) =>
-      value &&
-      value.map((v: DescriptorMap) =>
-        instanceToPlain(v, { excludeExtraneousValues: true })
-      ),
-    { toPlainOnly: true }
-  )
+  // @Transform(
+  //   ({ value }) =>
+  //     value &&
+  //     value.map((v: DescriptorMap) =>
+  //       instanceToPlain(v, { excludeExtraneousValues: true })
+  //     ),
+  //   { toPlainOnly: true }
+  // )
   descriptorMaps?: DescriptorMap[];
 
   constructor(id: Id, definitionId: Id, descriptorMaps: DescriptorMap[]);
@@ -605,5 +625,13 @@ export class PresentationSubmission {
     this.id = id;
     this.definitionId = definitionId;
     this.descriptorMaps = descriptorMaps;
+  }
+
+  serialize() {
+    return instanceToPlain(this);
+  }
+
+  static deserialize(json: unknown) {
+    return plainToInstance(this, json);
   }
 }

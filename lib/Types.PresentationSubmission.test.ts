@@ -186,4 +186,81 @@ describe('PresentationSubmission', () => {
       expect(instance.descriptorMaps).toBe(descriptorMaps);
     });
   });
+
+  describe('serialize', () => {
+    it('should serialize the instance', () => {
+      const instance = new PresentationSubmission(
+        new Id('submission1'),
+        new Id('def1'),
+        [
+          new DescriptorMap(
+            new Id('desc1'),
+            'json',
+            JsonPath.jsonPath('$.data.value')!
+          ),
+          new DescriptorMap(
+            new Id('desc2'),
+            'xml',
+            JsonPath.jsonPath('$.other.value')!
+          ),
+        ]
+      );
+
+      const plain = instance.serialize();
+
+      expect(plain).toEqual({
+        id: 'submission1',
+        definition_id: 'def1',
+        descriptor_map: [
+          {
+            id: 'desc1',
+            format: 'json',
+            path: '$.data.value',
+          },
+          {
+            id: 'desc2',
+            format: 'xml',
+            path: '$.other.value',
+          },
+        ],
+      });
+    });
+  });
+  describe('deserialize', () => {
+    it('should deserialize the instance', () => {
+      const plain = {
+        id: 'submission1',
+        definition_id: 'def1',
+        descriptor_map: [
+          {
+            id: 'desc1',
+            format: 'json',
+            path: '$.data.value',
+          },
+          {
+            id: 'desc2',
+            format: 'xml',
+            path: '$.other.value',
+          },
+        ],
+      };
+
+      const instance = PresentationSubmission.deserialize(plain);
+
+      expect(instance).toBeInstanceOf(PresentationSubmission);
+      expect(instance.id).toBeInstanceOf(Id);
+      expect(instance.id?.value).toBe('submission1');
+      expect(instance.definitionId).toBeInstanceOf(Id);
+      expect(instance.definitionId?.value).toBe('def1');
+      expect(instance.descriptorMaps).toHaveLength(2);
+      expect(instance.descriptorMaps?.[0]).toBeInstanceOf(DescriptorMap);
+      expect(instance.descriptorMaps?.[0]?.id).toBeInstanceOf(
+        InputDescriptorId
+      );
+      expect(instance.descriptorMaps?.[0]?.id?.value).toBe('desc1');
+      expect(instance.descriptorMaps?.[0]?.format).toBe('json');
+      expect(instance.descriptorMaps?.[0]?.path).toBeInstanceOf(JsonPath);
+      expect(instance.descriptorMaps?.[0]?.path?.value).toBe('$.data.value');
+    });
+  });
 });
