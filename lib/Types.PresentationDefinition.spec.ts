@@ -186,7 +186,7 @@ describe('Types', () => {
       });
     });
     describe('serialize', () => {
-      it('should deserialize the instance', () => {
+      it('should serialize the instance', () => {
         const presentationDefinition = new PresentationDefinition(
           new Id('abc'),
           new Name('abc'),
@@ -226,13 +226,13 @@ describe('Types', () => {
           id: 'abc',
           name: 'abc',
           purpose: 'abc',
-          format: '{"value":"abc"}',
+          format: { value: 'abc' },
           input_descriptors: [
             {
               id: 'abc',
               name: 'abc',
               purpose: 'abc',
-              format: '{"value":"abc"}',
+              format: { value: 'abc' },
               constraints: {
                 fieldConstraints: [
                   {

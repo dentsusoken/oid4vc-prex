@@ -362,7 +362,9 @@ export class InputDescriptor {
   @Transform(({ value }) => value && Format.format(value), {
     toClassOnly: true,
   })
-  @Transform(({ value }) => value?.json, { toPlainOnly: true })
+  @Transform(({ value }) => value && (value as Format).jsonObject(), {
+    toPlainOnly: true,
+  })
   format?: Format;
 
   @Expose()
@@ -439,7 +441,9 @@ export class PresentationDefinition {
   @Transform(({ value }) => value && Format.format(value), {
     toClassOnly: true,
   })
-  @Transform(({ value }) => value?.json, { toPlainOnly: true })
+  @Transform(({ value }) => value && (value as Format).jsonObject(), {
+    toPlainOnly: true,
+  })
   format?: Format;
 
   @Expose({ name: 'input_descriptors' })
