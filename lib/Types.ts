@@ -624,6 +624,7 @@ export class PresentationSubmission {
   // )
   descriptorMaps?: DescriptorMap[];
 
+  constructor();
   constructor(id: Id, definitionId: Id, descriptorMaps: DescriptorMap[]);
   constructor(id?: Id, definitionId?: Id, descriptorMaps?: DescriptorMap[]) {
     this.id = id;
