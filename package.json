@@ -33,6 +33,7 @@
     "link": "npm install && npm run build && npm link"
   },
   "devDependencies": {
+    "@types/json-schema": "^7.0.15",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "eslint": "^8.57.0",
     "typescript": "^5.4.5",
@@ -44,6 +45,7 @@
     "jose": "^5.6.3",
     "jsonpath-plus": "^9.0.0",
     "reflect-metadata": "^0.2.2",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
   }
 }
