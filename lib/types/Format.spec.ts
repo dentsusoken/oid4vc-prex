@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   claimFormatSchema,
   formatJSONClaimsSchema,
-  formatJSONSchema,
+  formatSchema,
   Format,
 } from './Format';
 
@@ -29,28 +29,26 @@ describe('Format', () => {
         expect(formatJSONClaimsSchema.parse({})).toEqual({});
       });
     });
-    describe('formatJSONSchema', () => {
+    describe('formatSchema', () => {
       it('should return format JSON schema', () => {
         expect(
-          formatJSONSchema.parse({
+          formatSchema.parse({
             jwt: { alg: ['HS256'], proof_type: ['JsonWebSignature2020'] },
           })
         ).toEqual({
           jwt: { alg: ['HS256'], proof_type: ['JsonWebSignature2020'] },
         });
-        expect(formatJSONSchema.parse({ jwt: { alg: ['HS256'] } })).toEqual({
+        expect(formatSchema.parse({ jwt: { alg: ['HS256'] } })).toEqual({
           jwt: { alg: ['HS256'] },
         });
-        expect(formatJSONSchema.parse({})).toEqual({});
+        expect(formatSchema.parse({})).toEqual({});
       });
       it('should throw ZodError', () => {
+        expect(() => formatSchema.parse({ jwt: { alg: [''] } })).toThrowError();
         expect(() =>
-          formatJSONSchema.parse({ jwt: { alg: [''] } })
+          formatSchema.parse({ jwt: { alg: [123] } })
         ).toThrowError();
-        expect(() =>
-          formatJSONSchema.parse({ jwt: { alg: [123] } })
-        ).toThrowError();
-        expect(() => formatJSONSchema.parse('jwt')).toThrowError();
+        expect(() => formatSchema.parse('jwt')).toThrowError();
       });
     });
     describe('Format', () => {

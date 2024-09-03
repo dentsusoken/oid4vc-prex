@@ -101,7 +101,7 @@ export class FieldConstraint {
    * @param {Purpose} purpose - The purpose of the FieldConstraint.
    * @param {Filter} filter - The filter of the FieldConstraint.
    * @param {boolean} optional - The optional of the FieldConstraint.
-   * @param {boolean} intent_to_retain - The intent_to_retain of the FieldConstraint.
+   * @param {boolean} intentToRetain - The intent_to_retain of the FieldConstraint.
    */
   constructor(
     public paths?: Path,
@@ -110,7 +110,7 @@ export class FieldConstraint {
     public purpose?: Purpose,
     public filter?: Filter,
     public optional?: boolean,
-    public intent_to_retain?: boolean
+    public intentToRetain?: boolean
   ) {}
 
   /**
@@ -149,7 +149,7 @@ export class FieldConstraint {
       purpose: this.purpose ? this.purpose.toJSON() : undefined,
       filter: this.filter ? this.filter.toJSON() : undefined,
       optional: this.optional,
-      intent_to_retain: this.intent_to_retain,
+      intent_to_retain: this.intentToRetain,
     };
   }
 }

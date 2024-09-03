@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { z } from 'zod';
-import { FieldConstraint, FieldConstraintJSON } from './FieldConstraint';
-import { createNonEmptySetSchema } from './NonEmptySet';
+import { FieldConstraint, fieldConstraintSchema } from './FieldConstraint';
+import { NonEmptySet, createNonEmptySetSchema } from './NonEmptySet';
 
 /**
  * Zod schema for a set of FieldConstraints.
  * This schema ensures that a value is a non-empty set of FieldConstraints.
  * It applies the following validations:
  * - The value must be a non-empty set of FieldConstraints.
- * @type {z.ZodNonEmptyArray<FieldConstraint>}
+ * @type {z.ZodNonEmptyArray}
  * @example
  * // Valid usage
- * fieldConstraintsSchema.parse([new FieldConstraint('$.a'), new FieldConstraint('$.b')]); // Returns [FieldConstraint, FieldConstraint]
+ * fieldsSchema.parse([{ path: ['$.a'], id: '123', name: 'name', purpose: 'purpose', filter: { type: 'string' }, optional: true, intent_to_retain: true }]); // Returns [{ path: ['$.a'], id: '123', name: 'name', purpose: 'purpose', filter: { type: 'string' }, optional: true, intent_to_retain: true }]
  * // Invalid usage (will throw ZodError)
- * fieldConstraintsSchema.parse([]); // Throws error: Invalid input
+ * fieldsSchema.parse([]); // Throws error: Invalid input
  * @throws {z.ZodError} Throws a ZodError if the input fails validation
  */
-export const fieldConstraintsSchema = createNonEmptySetSchema(
-  z.instanceof(FieldConstraint)
-);
+export const fieldsSchema = createNonEmptySetSchema(fieldConstraintSchema);
 
 /**
  * Zod schema for a limit disclosure value.
@@ -52,6 +49,44 @@ export const fieldConstraintsSchema = createNonEmptySetSchema(
 export const limitDisclosureSchema = z.enum(['required', 'preferred']);
 
 /**
+ * Zod schema for Constraints.
+ * This schema ensures that a value is a valid Constraints.
+ * It applies the following validations:
+ * - The value must be an object.
+ * - The object may have a fields property.
+ * - The fields property must be a non-empty set of FieldConstraints.
+ * - The object may have a limitDisclosure property.
+ * - The limitDisclosure property must be a valid limit disclosure value.
+ * @type {z.ZodObject}
+ * @example
+ * // Valid usage
+ * constraintsSchema.parse({ fields: [{ path: ['$.a'], id: '123', name: 'name', purpose: 'purpose', filter: { type: 'string' }, optional: true, intent_to_retain: true }], limitDisclosure: 'required' }); // Returns { fields: [{ path: ['$.a'], id: '123', name: 'name', purpose: 'purpose', filter: { type: 'string' }, optional: true, intent_to_retain: true }], limitDisclosure: 'required' }
+ * // Invalid usage (will throw ZodError)
+ * constraintsSchema.parse({ fields: [], limitDisclosure: 'required' }); // Throws error: Invalid input
+ */
+export const constraintsSchema = z.object({
+  fields: fieldsSchema.optional(),
+  limit_disclosure: limitDisclosureSchema.optional(),
+});
+
+/**
+ * Type of a set of FieldConstraint.
+ */
+export type FieldConstraintSet = NonEmptySet<FieldConstraint>;
+/**
+ * Type of a set of FieldConstraintJSON.
+ */
+export type FieldConstraintJSONSet = z.infer<typeof fieldsSchema>;
+/**
+ * Type of a limit disclosure value.
+ */
+export type LimitDisclosureValue = z.infer<typeof limitDisclosureSchema>;
+/**
+ * Type of a Constraints JSON object.
+ */
+export type ConstraintsJSON = z.infer<typeof constraintsSchema>;
+
+/**
  * Interface for Constraints.
  * This interface represents the constraints property of Input Descriptor
  * @interface
@@ -62,52 +97,7 @@ export interface Constraints {
     | 'Fields'
     | 'LimitDisclosure'
     | 'FieldsAndDisclosure';
-}
-
-/**
- * Type of a set of FieldConstraints.
- */
-export type FieldConstraintSet = z.infer<typeof fieldConstraintsSchema>;
-/**
- * Type of a limit disclosure value.
- */
-export type LimitDisclosureValue = z.infer<typeof limitDisclosureSchema>;
-
-/**
- * Represents a set of constraints for the Input Descriptor.
- * It contains a set of FieldConstraints.
- * @class
- * @implements {Constraints}
- * @param {FieldConstraintSet} fields - The set of FieldConstraints.
- * @example
- * // Create a new FieldsConstraints
- * const fieldsConstraints = new FieldsConstraints([new FieldConstraint('$.a'), new FieldConstraint('$.b')]);
- */
-export class FieldsConstraints implements Constraints {
-  readonly __type = 'FieldsConstraints' as const;
-
-  /**
-   * Creates an instance of FieldsConstraints.
-   * @param {FieldConstraintSet} fields - The set of FieldConstraints.
-   */
-  constructor(public fields: FieldConstraintSet) {}
-
-  /**
-   * Creates an instance of FieldsConstraints.
-   * @param {FieldConstraintSet} fieldsConstraints - The JSON object representing the FieldsConstraints.
-   * @returns {FieldsConstraints} A new FieldsConstraints instance.
-   */
-  static fromJSON(fieldsConstraints: FieldConstraintSet): FieldsConstraints {
-    return new FieldsConstraints(fieldsConstraints);
-  }
-
-  /**
-   * Returns the JSON object representation of the FieldsConstraints.
-   * @returns {FieldConstraintJSON[]} The JSON object representation of the FieldsConstraints.
-   */
-  toJSON(): FieldConstraintJSON[] {
-    return this.fields.map((field) => field.toJSON());
-  }
+  toJSON(): ConstraintsJSON;
 }
 
 /**
@@ -142,19 +132,27 @@ export namespace Constraints {
 
     /**
      * Creates an instance of Fields from a JSON object.
-     * @param {FieldConstraintSet} fieldConstraints - The JSON object representing the Fields.
+     * @param {FieldConstraintJSONSet} fieldConstraints - The JSON object representing the Fields.
      * @returns {Fields} A new Fields instance.
      */
-    static fromJSON(fieldConstraints: FieldConstraintSet): Fields {
-      return new Fields(fieldConstraints);
+    static fromJSON(fieldsConstraints: FieldConstraintJSONSet): Fields {
+      return new Fields(
+        fieldsConstraints.map((v) =>
+          FieldConstraint.fromJSON(v)
+        ) as FieldConstraintSet
+      );
     }
 
     /**
      * Returns the JSON object representation of the Fields.
      * @returns {FieldConstraintJSON[]} The JSON object representation of the Fields.
      */
-    toJSON(): FieldConstraintJSON[] {
-      return this.fieldConstraints.map((field) => field.toJSON());
+    toJSON(): ConstraintsJSON {
+      return {
+        fields: fieldsSchema.parse(
+          this.fieldConstraints.map((field) => field.toJSON())
+        ),
+      };
     }
   }
 
@@ -196,8 +194,8 @@ export namespace Constraints {
      * Returns The value of the LimitDisclosure.
      * @returns {LimitDisclosureValue} The value of the LimitDisclosure.
      */
-    toJSON() {
-      return this.value;
+    toJSON(): ConstraintsJSON {
+      return { limit_disclosure: this.value };
     }
 
     /**
@@ -243,6 +241,19 @@ export namespace Constraints {
       if (!fieldConstraints || fieldConstraints.length === 0) {
         throw new Error('fieldConstraints is required');
       }
+    }
+
+    /**
+     * Returns The value of the LimitDisclosure.
+     * @returns {LimitDisclosureValue} The value of the LimitDisclosure.
+     */
+    toJSON(): ConstraintsJSON {
+      return {
+        limit_disclosure: this.limitDisclosure.value,
+        fields: fieldsSchema.parse(
+          this.fieldConstraints.map((field) => field.toJSON())
+        ),
+      };
     }
   }
 
@@ -290,17 +301,37 @@ export namespace Constraints {
     if (fs && fs.length > 0) {
       if (limitDisclosure) {
         return new FieldsAndDisclosure(
-          fieldConstraintsSchema.parse(fs),
+          fs as FieldConstraintSet,
           limitDisclosure
         );
       }
       if (!limitDisclosure) {
-        return new Fields(fieldConstraintsSchema.parse(fs));
+        return new Fields(fs as FieldConstraintSet);
       }
     } else if (!fs && limitDisclosure) {
       return limitDisclosure;
     } else {
       return;
     }
+  };
+
+  export const fromJSON = (json: ConstraintsJSON): Constraints => {
+    if (json.fields && json.limit_disclosure) {
+      return new FieldsAndDisclosure(
+        json.fields.map((v) =>
+          FieldConstraint.fromJSON(v)
+        ) as FieldConstraintSet,
+        LimitDisclosure.fromString(json.limit_disclosure)
+      );
+    } else if (json.fields) {
+      return new Fields(
+        json.fields.map((v) =>
+          FieldConstraint.fromJSON(v)
+        ) as FieldConstraintSet
+      );
+    } else if (json.limit_disclosure) {
+      return LimitDisclosure.fromString(json.limit_disclosure);
+    }
+    throw new Error('Invalid Constraints JSON');
   };
 }

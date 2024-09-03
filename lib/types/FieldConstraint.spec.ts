@@ -4,9 +4,9 @@ import {
   fieldConstraintSchema,
   FieldConstraint,
 } from './FieldConstraint';
-import { Id } from '../value-objects/Id';
-import { Name } from '../value-objects/Name';
-import { Purpose } from '../value-objects/Purpose';
+import { Id } from './Id';
+import { Name } from './Name';
+import { Purpose } from './Purpose';
 import { Filter } from './Filter';
 
 describe('FieldConstraint', () => {
@@ -89,7 +89,7 @@ describe('FieldConstraint', () => {
       expect(fieldConstraint.filter).toBeInstanceOf(Filter);
       expect(fieldConstraint.filter?.value).toStrictEqual({ type: 'string' });
       expect(fieldConstraint.optional).toStrictEqual(true);
-      expect(fieldConstraint.intent_to_retain).toStrictEqual(true);
+      expect(fieldConstraint.intentToRetain).toStrictEqual(true);
     });
   });
   describe('toJSON', () => {

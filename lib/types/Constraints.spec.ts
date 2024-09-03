@@ -1,26 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import {
   Constraints,
-  FieldsConstraints,
-  fieldConstraintsSchema,
+  fieldsSchema,
   limitDisclosureSchema,
+  constraintsSchema,
 } from './Constraints';
 import { FieldConstraint } from './FieldConstraint';
 
 describe('Constraints', () => {
-  describe('fieldConstraintsSchema', () => {
+  describe('fieldsSchema', () => {
     it('should validate', () => {
       const fieldConstraints = [
-        FieldConstraint.fromJSON({
+        {
           path: ['$.a'],
-        }),
+        },
       ];
-      const result = fieldConstraintsSchema.parse(fieldConstraints);
+      const result = fieldsSchema.parse(fieldConstraints);
       expect(result).toEqual(fieldConstraints);
     });
     it('should throw error if invalid', () => {
       const fieldConstraints = [];
-      expect(() => fieldConstraintsSchema.parse(fieldConstraints)).toThrow();
+      expect(() => fieldsSchema.parse(fieldConstraints)).toThrow();
     });
   });
   describe('limitDisclosure', () => {
@@ -32,31 +32,29 @@ describe('Constraints', () => {
       expect(() => limitDisclosureSchema.parse('')).toThrow();
     });
   });
-  describe('FieldsConstraints', () => {
-    describe('constructor', () => {
-      it('should create instance', () => {
-        const fieldConstraints = new FieldsConstraints([
-          FieldConstraint.fromJSON({ path: ['$.a'] }),
-        ]);
-        expect(fieldConstraints).toBeInstanceOf(FieldsConstraints);
-      });
+  describe('constraintsSchema', () => {
+    it('should validate', () => {
+      expect(
+        constraintsSchema.safeParse({
+          fields: [
+            {
+              path: ['$.a'],
+              id: '123',
+              name: 'name',
+              purpose: 'purpose',
+              filter: { type: 'string' },
+              optional: true,
+              intent_to_retain: true,
+            },
+          ],
+          limitDisclosure: 'required',
+        }).success
+      ).toBe(true);
     });
-    describe('fromJSON', () => {
-      it('should create instance from JSON', () => {
-        const fieldConstraints = FieldsConstraints.fromJSON([
-          FieldConstraint.fromJSON({ path: ['$.a'] }),
-        ]);
-        expect(fieldConstraints).toBeInstanceOf(FieldsConstraints);
-      });
-    });
-    describe('toJSON', () => {
-      it('should return JSON', () => {
-        const fieldConstraints = new FieldsConstraints([
-          FieldConstraint.fromJSON({ path: ['$.a'] }),
-        ]);
-        const result = fieldConstraints.toJSON();
-        expect(result).toEqual([{ path: ['$.a'] }]);
-      });
+    it('should throw error if invalid', () => {
+      expect(() =>
+        constraintsSchema.parse({ fields: [], limitDisclosure: '' })
+      ).toThrow();
     });
   });
   describe('Fields', () => {
@@ -75,7 +73,7 @@ describe('Constraints', () => {
     describe('fromJSON', () => {
       it('should create instance from JSON', () => {
         const fieldConstraints = Constraints.Fields.fromJSON([
-          FieldConstraint.fromJSON({ path: ['$.a'] }),
+          { path: ['$.a'] },
         ]);
         expect(fieldConstraints).toBeInstanceOf(Constraints.Fields);
       });
@@ -86,7 +84,7 @@ describe('Constraints', () => {
           FieldConstraint.fromJSON({ path: ['$.a'] }),
         ]);
         const result = fieldConstraints.toJSON();
-        expect(result).toEqual([{ path: ['$.a'] }]);
+        expect(result).toEqual({ fields: [{ path: ['$.a'] }] });
       });
     });
   });
@@ -113,7 +111,7 @@ describe('Constraints', () => {
       it('should return JSON', () => {
         const limitDisclosure = Constraints.LimitDisclosure.REQUIRED;
         const result = limitDisclosure.toJSON();
-        expect(result).toBe('required');
+        expect(result).toEqual({ limit_disclosure: 'required' });
       });
     });
   });
@@ -127,6 +125,19 @@ describe('Constraints', () => {
         expect(fieldsAndDisclosure).toBeInstanceOf(
           Constraints.FieldsAndDisclosure
         );
+      });
+    });
+    describe('toJSON', () => {
+      it('should return JSON', () => {
+        const fieldsAndDisclosure = new Constraints.FieldsAndDisclosure(
+          [FieldConstraint.fromJSON({ path: ['$.a'] })],
+          Constraints.LimitDisclosure.REQUIRED
+        );
+        const result = fieldsAndDisclosure.toJSON();
+        expect(result).toEqual({
+          fields: [{ path: ['$.a'] }],
+          limit_disclosure: 'required',
+        });
       });
     });
   });
