@@ -82,7 +82,7 @@ export class InputDescriptor {
    * @param {InputDescriptorJSON} json
    * @returns {InputDescriptor}
    */
-  static fromJson(json: InputDescriptorJSON): InputDescriptor {
+  static fromJSON(json: InputDescriptorJSON): InputDescriptor {
     return new InputDescriptor(
       new InputDescriptorId(json.id),
       json.name ? new Name(json.name) : undefined,
