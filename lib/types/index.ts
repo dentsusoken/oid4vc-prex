@@ -26,3 +26,4 @@ export * from './PresentationSubmission';
 export * from './Purpose';
 export * from './Rule';
 export * from './SubmissionRequirement';
+export * from './JsonObject';
