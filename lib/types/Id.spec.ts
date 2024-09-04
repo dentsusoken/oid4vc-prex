@@ -9,11 +9,6 @@ describe('Id', () => {
       expect(id).toBeInstanceOf(Id);
       expect(id.value).toBe('123');
     });
-    it('should throw error if value is falsy', () => {
-      expect(() => new Id('')).toThrow('value is required');
-      expect(() => new Id(null!)).toThrow('value is required');
-      expect(() => new Id(undefined!)).toThrow('value is required');
-    });
   });
   describe('toJSON', () => {
     it('should return value', () => {

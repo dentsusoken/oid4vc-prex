@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { DescriptorMap, descriptorMapSchema } from './DescriptorMap';
-import basicSM from '../../example/presentation-submission/basic-example.json';
+import basicPS from '../../example/presentation-submission/basic-example.json';
 import { InputDescriptorId } from './InputDescriptorId';
 import { JsonPath } from './JsonPath';
 
-const descriptor_map = basicSM.descriptor_map[3];
+const descriptor_map = basicPS.descriptor_map[3];
 
 describe('DescriptorMap', () => {
   describe('descriptorMapSchema', () => {
