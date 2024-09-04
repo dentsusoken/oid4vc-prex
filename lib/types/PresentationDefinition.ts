@@ -24,6 +24,17 @@ import {
   submissionRequirementSchema,
 } from './SubmissionRequirement';
 
+/**
+ * Zod schema for validating presentation definition values.
+ *
+ * This schema ensures that a presentation definition is an object with the following properties:
+ * - id: The value must be a string.
+ * - name: An optional string.
+ * - purpose: An optional string.
+ * - format: An optional object that must be an instance of Format.
+ * - input_descriptors: An optional array of objects that must be InputDescriptor json.
+ * - submission_requirements: An optional array of objects that must be SubmissionRequirement json.
+ */
 export const presentationDefinitionSchema = z.object({
   id: idSchema,
   name: nameSchema.optional(),
@@ -33,11 +44,34 @@ export const presentationDefinitionSchema = z.object({
   submission_requirements: z.array(submissionRequirementSchema).optional(),
 });
 
+/**
+ * Type of a PresentationDefinition JSON object.
+ */
 export type PresentationDefinitionJSON = z.infer<
   typeof presentationDefinitionSchema
 >;
 
+/**
+ * Represents a presentation definition.
+ *
+ * @class
+ * @property {Id} id The id of the presentation definition.
+ * @property {Name} [name] The name of the presentation definition.
+ * @property {Purpose} [purpose] The purpose of the presentation definition.
+ * @property {Format} [format] The format of the presentation definition.
+ * @property {InputDescriptor[]} [inputDescriptors] The input descriptors of the presentation definition.
+ * @property {SubmissionRequirement[]} [submissionRequirements] The submission requirements of the presentation definition.
+ */
 export class PresentationDefinition {
+  /**
+   * Creates a new PresentationDefinition instance.
+   * @property {Id} id The id of the presentation definition.
+   * @property {Name} [name] The name of the presentation definition.
+   * @property {Purpose} [purpose] The purpose of the presentation definition.
+   * @property {Format} [format] The format of the presentation definition.
+   * @property {InputDescriptor[]} [inputDescriptors] The input descriptors of the presentation definition.
+   * @property {SubmissionRequirement[]} [submissionRequirements] The submission requirements of the presentation definition.
+   */
   public constructor(
     public id: Id,
     public name?: Name,
@@ -91,6 +125,10 @@ export class PresentationDefinition {
     checkInputDescriptorGroups();
   }
 
+  /**
+   * Convert a presentation definition JSON object to a PresentationDefinition instance.
+   * @returns {PresentationDefinitionJSON} A presentation definition JSON object.
+   */
   public toJSON(): PresentationDefinitionJSON {
     return {
       id: this.id.value,
@@ -106,6 +144,11 @@ export class PresentationDefinition {
     };
   }
 
+  /**
+   * Convert a presentation definition JSON object to a PresentationDefinition instance.
+   * @param {PresentationDefinitionJSON} json - The presentation definition JSON object.
+   * @returns {PresentationDefinition} A new PresentationDefinition instance.
+   */
   static fromJSON(json: PresentationDefinitionJSON): PresentationDefinition {
     return new PresentationDefinition(
       new Id(json.id),
