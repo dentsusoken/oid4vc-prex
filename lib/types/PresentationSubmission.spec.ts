@@ -33,10 +33,10 @@ describe('PresentationSubmission', () => {
 
       expect(presentationSubmission).toBeInstanceOf(PresentationSubmission);
       expect(presentationSubmission.id.value).toBe(basicPS.id);
-      expect(presentationSubmission.definition_id.value).toBe(
+      expect(presentationSubmission.definitionId.value).toBe(
         basicPS.definition_id
       );
-      expect(presentationSubmission.descriptor_map).toHaveLength(
+      expect(presentationSubmission.descriptorMaps).toHaveLength(
         basicPS.descriptor_map.length
       );
     });
@@ -47,14 +47,12 @@ describe('PresentationSubmission', () => {
         presentationSubmissionSchema.parse(basicPS)
       );
 
-      console.log('presentationSubmission :>> ', presentationSubmission);
-
       expect(presentationSubmission).toBeInstanceOf(PresentationSubmission);
       expect(presentationSubmission.id.value).toBe(basicPS.id);
-      expect(presentationSubmission.definition_id.value).toBe(
+      expect(presentationSubmission.definitionId.value).toBe(
         basicPS.definition_id
       );
-      expect(presentationSubmission.descriptor_map).toHaveLength(
+      expect(presentationSubmission.descriptorMaps).toHaveLength(
         basicPS.descriptor_map.length
       );
     });

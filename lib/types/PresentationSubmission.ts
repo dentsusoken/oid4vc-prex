@@ -60,21 +60,21 @@ export type PresentationSubmissionJSON = z.infer<
  * @class
  *
  * @property {Id} id - The id of the presentation submission.
- * @property {Id} definition_id - The id of the presentation definition.
- * @property {DescriptorMap[]} descriptor_map - An array of descriptor maps.
+ * @property {Id} definitionId - The id of the presentation definition.
+ * @property {DescriptorMap[]} descriptorMaps - An array of descriptor maps.
  */
 export class PresentationSubmission {
   /**
    * Create a new PresentationSubmission instance.
    *
    * @param {Id} id - The id of the presentation submission.
-   * @param {Id} definition_id - The id of the presentation definition.
-   * @param {DescriptorMap[]} descriptor_map - An array of descriptor maps.
+   * @param {Id} definitionId - The id of the presentation definition.
+   * @param {DescriptorMap[]} descriptorMaps - An array of descriptor maps.
    */
   constructor(
     public id: Id,
-    public definition_id: Id,
-    public descriptor_map: DescriptorMap[]
+    public definitionId: Id,
+    public descriptorMaps: DescriptorMap[]
   ) {}
 
   /**
@@ -97,8 +97,8 @@ export class PresentationSubmission {
   toJSON(): PresentationSubmissionJSON {
     return presentationSubmissionSchema.parse({
       id: this.id.toJSON(),
-      definition_id: this.definition_id.toJSON(),
-      descriptor_map: this.descriptor_map.map((dm) => dm.toJSON()),
+      definition_id: this.definitionId.toJSON(),
+      descriptor_map: this.descriptorMaps.map((dm) => dm.toJSON()),
     });
   }
 }

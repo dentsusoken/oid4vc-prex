@@ -86,7 +86,7 @@ export type DescriptorMapJSON = {
  * @param {InputDescriptorId} id The input descriptor ID
  * @param {string} format The format of the JSON value
  * @param {JsonPath} path The JSON path to the value
- * @param {DescriptorMap} path_nested An optional nested descriptor map
+ * @param {DescriptorMap} pathNested An optional nested descriptor map
  *
  */
 export class DescriptorMap {
@@ -95,13 +95,13 @@ export class DescriptorMap {
    * @param {InputDescriptorId} id
    * @param {string} format
    * @param {JsonPath} path
-   * @param {DescriptorMap} path_nested
+   * @param {DescriptorMap} pathNested
    */
   constructor(
     public id: InputDescriptorId,
     public format: string,
     public path: JsonPath,
-    public path_nested?: DescriptorMap
+    public pathNested?: DescriptorMap
   ) {}
 
   /**
@@ -131,7 +131,7 @@ export class DescriptorMap {
       id: this.id.toJSON(),
       format: this.format,
       path: this.path.toJSON(),
-      path_nested: this.path_nested?.toJSON(),
+      path_nested: this.pathNested?.toJSON(),
     };
   }
 }
