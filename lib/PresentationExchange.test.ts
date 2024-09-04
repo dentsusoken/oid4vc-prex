@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { describe, expect, it } from 'vitest';
 import { PresentationExchange } from './PresentationExchange';
 import { Result } from './kotlin';
