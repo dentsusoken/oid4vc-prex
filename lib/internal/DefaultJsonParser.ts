@@ -16,7 +16,10 @@
 import { plainToInstance } from 'class-transformer';
 import { JsonParser } from '../JsonParser';
 import { Result, runCatching } from '../kotlin';
-import { JsonObject, PresentationSubmission } from '../Types';
+import { PresentationSubmission } from '../types';
+
+// TODO - remove this type
+type JsonObject = Record<string, unknown>;
 
 /**
  * The key under which a presentation definition is expected to be found

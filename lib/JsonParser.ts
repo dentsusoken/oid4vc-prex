@@ -16,7 +16,7 @@
 import {
   // PresentationDefinition,
   PresentationSubmission,
-} from './Types';
+} from './types';
 import { Result } from './kotlin';
 
 export interface JsonParser {
