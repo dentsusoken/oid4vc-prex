@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { plainToInstance } from 'class-transformer';
 import { JsonParser } from '../JsonParser';
 import { Result, runCatching } from '../kotlin';
-import { PresentationSubmission } from '../types';
-
-// TODO - remove this type
-type JsonObject = Record<string, unknown>;
+import {
+  JsonObject,
+  PresentationSubmission,
+  PresentationSubmissionJSON,
+  jsonObjectSchema,
+  presentationSubmissionSchema,
+} from '../types';
 
 /**
  * The key under which a presentation definition is expected to be found
@@ -29,6 +31,9 @@ type JsonObject = Record<string, unknown>;
 
 const presentationSubmissionKey = 'presentation_submission';
 
+/**
+ * The location where the presentation submission is embedded
+ */
 export enum PresentationSubmissionEmbedLocation {
   JWT,
   OIDC,
@@ -37,37 +42,65 @@ export enum PresentationSubmissionEmbedLocation {
   CHAPI,
 }
 
+/**
+ * Extracts the presentation submission from a JSON object
+ */
 export namespace PresentationSubmissionEmbedLocation {
-  export function extractFrom(
+  const detectRoot = (
     location: PresentationSubmissionEmbedLocation,
     json: JsonObject
-  ): JsonObject {
-    let root: JsonObject;
+  ) => {
     switch (location) {
       case PresentationSubmissionEmbedLocation.OIDC:
       case PresentationSubmissionEmbedLocation.VP:
-        root = json;
-        break;
+        return json;
       case PresentationSubmissionEmbedLocation.JWT:
-        root = json['vp'] as JsonObject;
-        break;
+        return jsonObjectSchema.parse(json['vp']);
       case PresentationSubmissionEmbedLocation.DIDComms:
-        root = (
-          (json['presentations~attach'] as JsonObject)?.data as JsonObject
-        )?.json as JsonObject;
-        break;
+        return jsonObjectSchema.parse(
+          jsonObjectSchema.parse(
+            jsonObjectSchema.parse(json['presentations~attach']).data
+          ).json
+        );
       case PresentationSubmissionEmbedLocation.CHAPI:
-        root = json['data'] as JsonObject;
-        break;
+        return jsonObjectSchema.parse(json.data);
+      default:
+        throw new Error('Unsupported location');
     }
-    return root?.[presentationSubmissionKey] as JsonObject;
+  };
+
+  /**
+   * Extracts the presentation submission from a JSON object
+   * @param location the location where the presentation submission is embedded
+   * @param json the JSON object
+   * @return the presentation submission or null if not found
+   */
+  export function extractFrom(
+    location: PresentationSubmissionEmbedLocation,
+    json: JsonObject
+  ): PresentationSubmissionJSON | undefined {
+    try {
+      const root = detectRoot(location, json);
+      return presentationSubmissionSchema.parse(
+        root[presentationSubmissionKey]
+      );
+    } catch (_) {
+      return;
+    }
   }
 }
-
+/**
+ * Default JSON parser implementation
+ */
 export const DefaultJsonParser: JsonParser = {
+  /**
+   * Decodes a presentation submission from a JSON string or a stream
+   * @param input the JSON string or stream
+   * @return the presentation submission
+   */
   async decodePresentationSubmission(
     input: string | ReadableStream<Uint8Array>
-  ): Promise<any> {
+  ) {
     if (typeof input === 'string') {
       return mapToPS(JSON.parse(input));
     } else {
@@ -86,11 +119,16 @@ export const DefaultJsonParser: JsonParser = {
   },
 };
 
+/**
+ * Maps a JSON object to a presentation submission
+ * @param json the JSON object
+ * @return the presentation submission
+ */
 export const mapToPS = async (
   json: JsonObject
 ): Promise<Result<PresentationSubmission>> => {
   return runCatching(() => {
-    const pdObject: JsonObject =
+    const pdObject =
       Object.values(PresentationSubmissionEmbedLocation)
         .filter((v) => typeof v === 'number')
         .map((location) =>
@@ -99,11 +137,8 @@ export const mapToPS = async (
             json
           )
         )
-        .find((v) => typeof v !== 'undefined') || json;
-
-    return plainToInstance(
-      PresentationSubmission,
-      pdObject as Record<string, unknown>
-    );
+        .find((v) => typeof v !== 'undefined') ||
+      presentationSubmissionSchema.parse(json);
+    return PresentationSubmission.fromJSON(pdObject);
   });
 };
