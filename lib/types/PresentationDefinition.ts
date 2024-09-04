@@ -163,4 +163,23 @@ export class PresentationDefinition {
       )
     );
   }
+
+  /**
+   * Convert this instance to a JSON object.
+   * @returns {PresentationDefinitionJSON} A presentation definition JSON object.
+   * @deprecated Use `toJSON` instead.
+   */
+  serialize(): PresentationDefinitionJSON {
+    return this.toJSON();
+  }
+
+  /**
+   * Convert a presentation definition JSON object to a PresentationDefinition instance.
+   * @param {PresentationDefinitionJSON} json - The presentation definition JSON object.
+   * @returns {PresentationDefinition} A new PresentationDefinition instance.
+   * @deprecated Use `fromJSON` instead.
+   */
+  static deserialize(json: PresentationDefinitionJSON): PresentationDefinition {
+    return this.fromJSON(json);
+  }
 }
