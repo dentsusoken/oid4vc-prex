@@ -5,8 +5,8 @@ import {
 } from './PresentationDefinition';
 import { InputDescriptor } from './InputDescriptor';
 import { Id } from './Id';
-import basicPD from '../../example/presentation-definition/basic-example.json';
-import mDLPD from '../../example/presentation-definition/mDL-example.json';
+import basicPD from '../../mock-data/presentation-definition/basic-example.json';
+import mDLPD from '../../mock-data/presentation-definition/mDL-example.json';
 
 describe('PresentationDefinition', () => {
   describe('presentationDefinitionSchema', () => {

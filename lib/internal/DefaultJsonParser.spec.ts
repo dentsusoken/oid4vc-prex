@@ -4,7 +4,7 @@ import {
   PresentationSubmissionEmbedLocation,
   mapToPS,
 } from './DefaultJsonParser';
-import basicPS from '../../example/presentation-submission/basic-example.json';
+import basicPS from '../../mock-data/presentation-submission/basic-example.json';
 
 describe('DefaultJsonParser', () => {
   describe('PresentationSubmissionEmbedLocation', () => {

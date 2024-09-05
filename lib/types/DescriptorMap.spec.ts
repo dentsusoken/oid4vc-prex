@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DescriptorMap, descriptorMapSchema } from './DescriptorMap';
-import basicPS from '../../example/presentation-submission/basic-example.json';
+import basicPS from '../../mock-data/presentation-submission/basic-example.json';
 import { InputDescriptorId } from './InputDescriptorId';
 import { JsonPath } from './JsonPath';
 

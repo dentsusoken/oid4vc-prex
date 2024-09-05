@@ -4,7 +4,7 @@ import {
   PresentationSubmission,
   presentationSubmissionSchema,
 } from './PresentationSubmission';
-import basicPS from '../../example/presentation-submission/basic-example.json';
+import basicPS from '../../mock-data/presentation-submission/basic-example.json';
 import { InputDescriptorId } from './InputDescriptorId';
 import { JsonPath } from './JsonPath';
 
