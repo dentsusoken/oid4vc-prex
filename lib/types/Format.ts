@@ -167,7 +167,7 @@ export class Format {
    * Creates a new Format instance.
    * @param {FormatJSON} json - JSON Object representation of the Format.
    */
-  constructor(public json: FormatJSON) {}
+  private constructor(public json: FormatJSON) {}
 
   /**
    * Creates a Format instance from a JSON .

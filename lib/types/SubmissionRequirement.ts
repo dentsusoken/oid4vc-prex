@@ -33,7 +33,7 @@ import { Purpose, purposeSchema } from './Purpose';
  * - min: An optional number.
  * - max: An optional number.
  *
- * @type {z.ZodObject}
+ * @type {z.ZodType<SubmissionRequirementJSON>}
  *
  * @example
  * // Valid usage
@@ -47,16 +47,17 @@ import { Purpose, purposeSchema } from './Purpose';
  * // Invalid usage (will throw ZodError)
  * submissionRequirementSchema.parse({}); // Throws error: Object has missing required properties
  */
-export const submissionRequirementSchema = z.lazy(() =>
-  z
-    .object({
-      name: nameSchema.optional(),
-      purpose: purposeSchema.optional(),
-      // ...fromSchema.shape,
-    })
-    .and(ruleSchema)
-    .and(fromSchema)
-);
+export const submissionRequirementSchema: z.ZodType<SubmissionRequirementJSON> =
+  z.lazy(() =>
+    z
+      .object({
+        name: nameSchema.optional(),
+        purpose: purposeSchema.optional(),
+        // ...fromSchema.shape,
+      })
+      .and(ruleSchema)
+      .and(fromSchema)
+  );
 
 /**
  * Type of a submission requirement.

@@ -92,11 +92,7 @@ export type ConstraintsJSON = z.infer<typeof constraintsSchema>;
  * @interface
  */
 export interface Constraints {
-  readonly __type:
-    | 'FieldsConstraints'
-    | 'Fields'
-    | 'LimitDisclosure'
-    | 'FieldsAndDisclosure';
+  readonly __type: 'Fields' | 'LimitDisclosure' | 'FieldsAndDisclosure';
   toJSON(): ConstraintsJSON;
 }
 

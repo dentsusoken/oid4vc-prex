@@ -29,7 +29,7 @@ import { JsonPath, jsonPathSchema } from './JsonPath';
  * - path: a JSONPath
  * - path_nested: an optional nested descriptor map
  *
- * @type {z.ZodObject}
+ * @type {z.ZodType<DescriptorMapJSON>}
  *
  * @example
  * // Valid usage
