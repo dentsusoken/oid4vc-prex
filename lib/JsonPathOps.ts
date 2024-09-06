@@ -24,8 +24,7 @@ export class JsonPathOps {
    * Checks that the provided [path][String] is JSON Path
    */
   static isValid(path: string): boolean {
-    const regex = /^\$(\.\w+|\[\d+\])*/;
-    return regex.test(path);
+    return toJsonPath(path).isSuccess;
   }
 
   /**
@@ -42,4 +41,4 @@ export const toJsonPath = (path: string) =>
   runCatching(() => JSONPath({ path: path, json: {} }));
 
 export const toJsonString = (jsonNode: unknown): string =>
-  jsonNode ? JSON.stringify(jsonNode) : '';
+  jsonNode ? JSON.stringify(jsonNode) : '{}';
