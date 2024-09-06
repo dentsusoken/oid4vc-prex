@@ -1,10 +1,10 @@
-import 'reflect-metadata';
 import { describe, expect, it } from 'vitest';
 import {
   DefaultJsonParser,
   PresentationSubmissionEmbedLocation,
   mapToPS,
 } from './DefaultJsonParser';
+import basicPS from '../../mock-data/presentation-submission/basic-example.json';
 
 describe('DefaultJsonParser', () => {
   describe('PresentationSubmissionEmbedLocation', () => {
@@ -14,50 +14,50 @@ describe('DefaultJsonParser', () => {
           const result = PresentationSubmissionEmbedLocation.extractFrom(
             PresentationSubmissionEmbedLocation.OIDC,
             {
-              presentation_submission: { id: 'OIDC' },
+              presentation_submission: basicPS,
             }
           );
-          expect(result).toStrictEqual({ id: 'OIDC' });
+          expect(result).toStrictEqual(basicPS);
         });
         it('when location is VP', () => {
           const result = PresentationSubmissionEmbedLocation.extractFrom(
             PresentationSubmissionEmbedLocation.VP,
             {
-              presentation_submission: { id: 'VP' },
+              presentation_submission: basicPS,
             }
           );
-          expect(result).toStrictEqual({ id: 'VP' });
+          expect(result).toStrictEqual(basicPS);
         });
         it('when location is JWT', () => {
           const result = PresentationSubmissionEmbedLocation.extractFrom(
             PresentationSubmissionEmbedLocation.JWT,
             {
               vp: {
-                presentation_submission: { id: 'JWT' },
+                presentation_submission: basicPS,
               },
             }
           );
-          expect(result).toStrictEqual({ id: 'JWT' });
+          expect(result).toStrictEqual(basicPS);
         });
         it('when location is DIDComms', () => {
           const result = PresentationSubmissionEmbedLocation.extractFrom(
             PresentationSubmissionEmbedLocation.DIDComms,
             {
               'presentations~attach': {
-                data: { json: { presentation_submission: { id: 'DIDComms' } } },
+                data: { json: { presentation_submission: basicPS } },
               },
             }
           );
-          expect(result).toStrictEqual({ id: 'DIDComms' });
+          expect(result).toStrictEqual(basicPS);
         });
         it('when location is CHAPI', () => {
           const result = PresentationSubmissionEmbedLocation.extractFrom(
             PresentationSubmissionEmbedLocation.CHAPI,
             {
-              data: { presentation_submission: { id: 'CHAPI' } },
+              data: { presentation_submission: basicPS },
             }
           );
-          expect(result).toStrictEqual({ id: 'CHAPI' });
+          expect(result).toStrictEqual(basicPS);
         });
       });
       describe('should return undefined', () => {
