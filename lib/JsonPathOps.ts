@@ -31,9 +31,9 @@ export class JsonPathOps {
    * Extracts from given [JSON][jsonString] the content
    * at [path][jsonPath]. Returns the value found at the path, if found
    */
-  static getJsonAtPath(jsonPath: string, jsonString: string): string | null {
+  static getJsonAtPath(jsonPath: string, jsonString: string): string {
     const result = JSONPath({ path: jsonPath, json: JSON.parse(jsonString) });
-    return JSON.stringify(result[0]);
+    return JSON.stringify(result);
   }
 }
 
