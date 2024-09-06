@@ -25,6 +25,8 @@ export interface JsonParser {
    * It is assumed that the [jsonString]/[inputStream] corresponds to a json object that either contains
    * a Json object under some well known location (embedded locations) or is the [PresentationSubmission]
    *
+   * @param {string | ReadableStream<Uint8Array>} input the JSON string or stream
+   * @return {Promise<Result<PresentationSubmission>>} the presentation submission
    * @see https://identity.foundation/presentation-exchange/spec/v2.0.0/#embed-locations
    */
   decodePresentationSubmission(

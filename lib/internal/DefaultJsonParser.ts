@@ -27,12 +27,18 @@ import {
  * The key under which a presentation definition is expected to be found
  * as defined in Presentation Exchange specification
  */
-// const presentationDefinitionKey = 'presentation_definition';
+export const presentationDefinitionKey = 'presentation_definition';
 
-const presentationSubmissionKey = 'presentation_submission';
+/**
+ * The key under which a presentation submission is expected to be found
+ * as defined in Presentation Exchange specification
+ */
+export const presentationSubmissionKey = 'presentation_submission';
 
 /**
  * The location where the presentation submission is embedded
+ * @enum
+ * @see https://identity.foundation/presentation-exchange/spec/v2.0.0/#embed-locations
  */
 export enum PresentationSubmissionEmbedLocation {
   JWT,
@@ -43,13 +49,20 @@ export enum PresentationSubmissionEmbedLocation {
 }
 
 /**
- * Extracts the presentation submission from a JSON object
+ * Namespace for presentation submission embed location
+ * @namespace
  */
 export namespace PresentationSubmissionEmbedLocation {
+  /**
+   * Detects the root of the presentation submission
+   * @param {PresentationSubmissionEmbedLocation} location the location where the presentation submission is embedded
+   * @param {JsonObject} json the JSON object
+   * @return {JsonObject} the root of the presentation submission
+   */
   const detectRoot = (
     location: PresentationSubmissionEmbedLocation,
     json: JsonObject
-  ) => {
+  ): JsonObject => {
     switch (location) {
       case PresentationSubmissionEmbedLocation.OIDC:
       case PresentationSubmissionEmbedLocation.VP:
@@ -71,9 +84,9 @@ export namespace PresentationSubmissionEmbedLocation {
 
   /**
    * Extracts the presentation submission from a JSON object
-   * @param location the location where the presentation submission is embedded
-   * @param json the JSON object
-   * @return the presentation submission or null if not found
+   * @param {PresentationSubmissionEmbedLocation} location the location where the presentation submission is embedded
+   * @param {JsonObject} json the JSON object
+   * @return {PresentationSubmissionJSON | undefined} the presentation submission or undefined if not found
    */
   export function extractFrom(
     location: PresentationSubmissionEmbedLocation,
@@ -95,12 +108,12 @@ export namespace PresentationSubmissionEmbedLocation {
 export const DefaultJsonParser: JsonParser = {
   /**
    * Decodes a presentation submission from a JSON string or a stream
-   * @param input the JSON string or stream
-   * @return the presentation submission
+   * @param {string | ReadableStream<Uint8Array>} input the JSON string or stream
+   * @return {Promise<Result<PresentationSubmission>>} the presentation submission
    */
   async decodePresentationSubmission(
     input: string | ReadableStream<Uint8Array>
-  ) {
+  ): Promise<Result<PresentationSubmission>> {
     if (typeof input === 'string') {
       return mapToPS(JSON.parse(input));
     } else {
@@ -121,8 +134,8 @@ export const DefaultJsonParser: JsonParser = {
 
 /**
  * Maps a JSON object to a presentation submission
- * @param json the JSON object
- * @return the presentation submission
+ * @param {JsonObject} json the JSON object
+ * @return {Promise<Result<PresentationSubmission>>} the presentation submission
  */
 export const mapToPS = async (
   json: JsonObject
