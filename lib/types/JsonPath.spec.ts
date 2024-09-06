@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { JsonPath, jsonPathSchema } from './JsonPath';
+import { JsonPathOps } from '../JsonPathOps';
 
 describe('JsonPath', () => {
   describe('fromString', () => {
@@ -10,7 +11,9 @@ describe('JsonPath', () => {
       expect(jsonPath!.value).toBe('$.abc123');
     });
     it('should return undefined', () => {
+      const spy = vi.spyOn(JsonPathOps, 'isValid').mockReturnValue(false);
       const jsonPath = JsonPath.fromString('abc123');
+      spy.mockRestore();
 
       expect(jsonPath).toBeUndefined();
     });
@@ -29,10 +32,12 @@ describe('JsonPath', () => {
       expect(jsonPathSchema.parse('$[0]')).toBe('$[0]');
     });
     it('should throw error if value is invalid', () => {
+      const spy = vi.spyOn(JsonPathOps, 'isValid').mockReturnValue(false);
       expect(() => jsonPathSchema.parse('abc123')).toThrow();
       expect(() => jsonPathSchema.parse(123)).toThrow(
         'Expected string, received number'
       );
+      spy.mockRestore();
     });
   });
 });

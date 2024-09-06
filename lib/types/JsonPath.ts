@@ -15,6 +15,7 @@
  */
 
 import { z } from 'zod';
+import { JsonPathOps } from '../JsonPathOps';
 
 /**
  * Zod schema for validating JSONPath values.
@@ -37,7 +38,9 @@ import { z } from 'zod';
  *
  * @throws {z.ZodError} Throws a ZodError if the input fails validation
  */
-export const jsonPathSchema = z.string().refine((v: string) => /^\$/.test(v));
+export const jsonPathSchema = z
+  .string()
+  .refine((v: string) => JsonPathOps.isValid(v));
 
 /**
  * Represents a JSON Path.

@@ -39,7 +39,7 @@ describe('FieldConstraint', () => {
         name: 'name',
         purpose: 'purpose',
         filter: { type: 'string' },
-        optional: true,
+        optional: 'true',
         intent_to_retain: true,
       };
 
