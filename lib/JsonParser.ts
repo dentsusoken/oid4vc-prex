@@ -16,7 +16,7 @@
 import {
   // PresentationDefinition,
   PresentationSubmission,
-} from './Types';
+} from './types';
 import { Result } from './kotlin';
 
 export interface JsonParser {
@@ -25,7 +25,9 @@ export interface JsonParser {
    * It is assumed that the [jsonString]/[inputStream] corresponds to a json object that either contains
    * a Json object under some well known location (embedded locations) or is the [PresentationSubmission]
    *
-   * @see <a href="https://identity.foundation/presentation-exchange/spec/v2.0.0/#embed-locations>embed-locations</a>
+   * @param {string | ReadableStream<Uint8Array>} input the JSON string or stream
+   * @return {Promise<Result<PresentationSubmission>>} the presentation submission
+   * @see https://identity.foundation/presentation-exchange/spec/v2.0.0/#embed-locations
    */
   decodePresentationSubmission(
     input: string | ReadableStream<Uint8Array>

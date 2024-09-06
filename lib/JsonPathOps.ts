@@ -24,17 +24,16 @@ export class JsonPathOps {
    * Checks that the provided [path][String] is JSON Path
    */
   static isValid(path: string): boolean {
-    const regex = /^\$(\.\w+|\[\d+\])*/;
-    return regex.test(path);
+    return toJsonPath(path).isSuccess;
   }
 
   /**
    * Extracts from given [JSON][jsonString] the content
    * at [path][jsonPath]. Returns the value found at the path, if found
    */
-  static getJsonAtPath(jsonPath: string, jsonString: string): string | null {
+  static getJsonAtPath(jsonPath: string, jsonString: string): string {
     const result = JSONPath({ path: jsonPath, json: JSON.parse(jsonString) });
-    return JSON.stringify(result[0]);
+    return JSON.stringify(result);
   }
 }
 
@@ -42,4 +41,4 @@ export const toJsonPath = (path: string) =>
   runCatching(() => JSONPath({ path: path, json: {} }));
 
 export const toJsonString = (jsonNode: unknown): string =>
-  jsonNode ? JSON.stringify(jsonNode) : '';
+  jsonNode ? JSON.stringify(jsonNode) : '{}';
