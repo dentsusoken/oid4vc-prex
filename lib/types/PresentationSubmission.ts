@@ -101,23 +101,4 @@ export class PresentationSubmission {
       descriptor_map: this.descriptorMaps.map((dm) => dm.toJSON()),
     });
   }
-
-  /**
-   * Convert this instance to a JSON object.
-   * @returns {PresentationSubmissionJSON} A presentation submission JSON object.
-   * @deprecated Use `toJSON` instead.
-   */
-  serialize(): PresentationSubmissionJSON {
-    return this.toJSON();
-  }
-
-  /**
-   * Convert a presentation submission JSON object to a PresentationDefinition instance.
-   * @param {PresentationSubmissionJSON} json - The presentation submission JSON object.
-   * @returns {PresentationSubmission} A new PresentationDefinition instance.
-   * @deprecated Use `fromJSON` instead.
-   */
-  static deserialize(json: PresentationSubmissionJSON): PresentationSubmission {
-    return this.fromJSON(json);
-  }
 }

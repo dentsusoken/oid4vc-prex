@@ -154,7 +154,7 @@ export class PresentationDefinition {
       new Id(json.id),
       json.name ? new Name(json.name) : undefined,
       json.purpose ? new Purpose(json.purpose) : undefined,
-      json.format ? new Format(json.format) : undefined,
+      json.format ? Format.fromJSON(json.format) : undefined,
       json.input_descriptors?.map((inputDescriptor) =>
         InputDescriptor.fromJSON(inputDescriptor)
       ),
@@ -162,24 +162,5 @@ export class PresentationDefinition {
         SubmissionRequirement.fromJSON(submissionRequirement)
       )
     );
-  }
-
-  /**
-   * Convert this instance to a JSON object.
-   * @returns {PresentationDefinitionJSON} A presentation definition JSON object.
-   * @deprecated Use `toJSON` instead.
-   */
-  serialize(): PresentationDefinitionJSON {
-    return this.toJSON();
-  }
-
-  /**
-   * Convert a presentation definition JSON object to a PresentationDefinition instance.
-   * @param {PresentationDefinitionJSON} json - The presentation definition JSON object.
-   * @returns {PresentationDefinition} A new PresentationDefinition instance.
-   * @deprecated Use `fromJSON` instead.
-   */
-  static deserialize(json: PresentationDefinitionJSON): PresentationDefinition {
-    return this.fromJSON(json);
   }
 }

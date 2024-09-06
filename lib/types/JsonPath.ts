@@ -58,16 +58,6 @@ export class JsonPath {
   private constructor(public value: string) {}
 
   /**
-   * Creates an instance of JsonPath.
-   *
-   * @param {string} value The JSON Path value
-   * @deprecated Use `fromString` instead.
-   */
-  static jsonPath(s: string): JsonPath | undefined {
-    return jsonPathSchema.safeParse(s).success ? new JsonPath(s) : undefined;
-  }
-
-  /**
    * Creates an instance of JsonPath from string.
    *
    * @param {string} value The JSON Path value

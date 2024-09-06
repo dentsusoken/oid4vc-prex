@@ -37,28 +37,6 @@ describe('Filter', () => {
       expect(filter.toJSON()).toEqual(jsonSchema);
     });
   });
-  describe('filter', () => {
-    it('should create a Filter instance from a JSON', () => {
-      const jsonSchema: JSONSchema7 = {
-        type: 'string',
-        const: 'https://eu.com/claims/DriversLicense.json',
-      };
-
-      const filter = Filter.filter(jsonSchema);
-      expect(filter.value).toEqual(jsonSchema);
-    });
-  });
-  describe('jsonObject', () => {
-    it('should return the JSONSchema value of the Filter class', () => {
-      const jsonSchema: JSONSchema7 = {
-        type: 'string',
-        const: 'https://eu.com/claims/DriversLicense.json',
-      };
-
-      const filter = new Filter(jsonSchema);
-      expect(filter.jsonObject()).toEqual(jsonSchema);
-    });
-  });
   describe('fromJSON', () => {
     it('should create a Filter instance from a JSON', () => {
       const jsonSchema: JSONSchema7 = {

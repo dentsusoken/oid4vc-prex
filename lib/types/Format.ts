@@ -179,29 +179,10 @@ export class Format {
   }
 
   /**
-   * Creates a Format instance from a JSON .
-   * @param {FormatJSON} json - JSON Object representation of the Format.
-   * @returns {Format} Format instance.
-   * @deprecated Use `fromJSON` method instead.
-   */
-  static format(json: FormatJSON): Format {
-    return new Format(json);
-  }
-
-  /**
    * Returns the JSON representation of the Format.
    * @returns {FormatJSON} JSON string representation of the Format.
    */
   toJSON(): FormatJSON {
-    return this.json;
-  }
-
-  /**
-   * Returns the JSON representation of the Format.
-   * @returns {FormatJSON} JSON string representation of the Format.
-   * @deprecated Use `toJSON` method instead.
-   */
-  jsonObject(): FormatJSON {
     return this.json;
   }
 }

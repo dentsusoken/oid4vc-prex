@@ -63,30 +63,9 @@ export class Filter {
    * Returns the JSONSchema value of the Filter class.
    *
    * @returns {JSONSchema} JSONSchema Object.
-   * @deprecated Use the `toJSON` method instead.
-   */
-  jsonObject(): JSONSchema {
-    return this.value;
-  }
-
-  /**
-   * Returns the JSONSchema value of the Filter class.
-   *
-   * @returns {JSONSchema} JSONSchema Object.
    */
   toJSON(): JSONSchema {
     return this.value;
-  }
-
-  /**
-   * Creates a Format instance from a JSON .
-   *
-   * @param {JSONSchema} value - JSON Object representation of the JSONSchema.
-   * @returns {Filter} Filter object.
-   * @deprecated Use `fromJSON` method instead.
-   */
-  static filter(value: JSONSchema): Filter {
-    return new Filter(value);
   }
 
   /**
