@@ -82,11 +82,12 @@ export class PresentationSubmission {
    * @param {PresentationSubmissionJSON} json - The presentation submission JSON object.
    * @returns {PresentationSubmission} A new PresentationSubmission instance.
    */
-  static fromJSON(json: PresentationSubmissionJSON): PresentationSubmission {
+  static fromJSON(json: unknown): PresentationSubmission {
+    const parsedJson = presentationSubmissionSchema.parse(json);
     return new PresentationSubmission(
-      new Id(json.id),
-      new Id(json.definition_id),
-      json.descriptor_map.map((dm) => DescriptorMap.fromJSON(dm))
+      new Id(parsedJson.id),
+      new Id(parsedJson.definition_id),
+      parsedJson.descriptor_map.map((dm) => DescriptorMap.fromJSON(dm))
     );
   }
 

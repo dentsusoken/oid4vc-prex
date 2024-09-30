@@ -33,7 +33,6 @@
     "link": "npm install && npm run build && npm link"
   },
   "devDependencies": {
-    "@types/json-schema": "^7.0.15",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "eslint": "^8.57.0",
     "typescript": "^5.4.5",
@@ -41,6 +40,7 @@
     "vitest": "^1.4.0"
   },
   "dependencies": {
+    "@types/json-schema": "^7.0.15",
     "jose": "^5.6.3",
     "json-schema": "^0.4.0",
     "jsonpath-plus": "^9.0.0",

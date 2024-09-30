@@ -149,16 +149,17 @@ export class PresentationDefinition {
    * @param {PresentationDefinitionJSON} json - The presentation definition JSON object.
    * @returns {PresentationDefinition} A new PresentationDefinition instance.
    */
-  static fromJSON(json: PresentationDefinitionJSON): PresentationDefinition {
+  static fromJSON(json: unknown): PresentationDefinition {
+    const parsedJson = presentationDefinitionSchema.parse(json);
     return new PresentationDefinition(
-      new Id(json.id),
-      json.name ? new Name(json.name) : undefined,
-      json.purpose ? new Purpose(json.purpose) : undefined,
-      json.format ? Format.fromJSON(json.format) : undefined,
-      json.input_descriptors?.map((inputDescriptor) =>
+      new Id(parsedJson.id),
+      parsedJson.name ? new Name(parsedJson.name) : undefined,
+      parsedJson.purpose ? new Purpose(parsedJson.purpose) : undefined,
+      parsedJson.format ? Format.fromJSON(parsedJson.format) : undefined,
+      parsedJson.input_descriptors?.map((inputDescriptor) =>
         InputDescriptor.fromJSON(inputDescriptor)
       ),
-      json.submission_requirements?.map((submissionRequirement) =>
+      parsedJson.submission_requirements?.map((submissionRequirement) =>
         SubmissionRequirement.fromJSON(submissionRequirement)
       )
     );
