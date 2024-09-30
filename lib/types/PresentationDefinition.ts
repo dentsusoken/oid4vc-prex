@@ -17,10 +17,15 @@ import { z } from 'zod';
 import { Id, idSchema } from './Id';
 import { Name, nameSchema } from './Name';
 import { Purpose, purposeSchema } from './Purpose';
-import { Format, formatSchema } from './Format';
-import { InputDescriptor, inputDescriptorSchema } from './InputDescriptor';
+import { Format, FormatJSON, formatSchema } from './Format';
+import {
+  InputDescriptor,
+  InputDescriptorJSON,
+  inputDescriptorSchema,
+} from './InputDescriptor';
 import {
   SubmissionRequirement,
+  SubmissionRequirementJSON,
   submissionRequirementSchema,
 } from './SubmissionRequirement';
 
@@ -42,14 +47,19 @@ export const presentationDefinitionSchema = z.object({
   format: formatSchema.optional(),
   input_descriptors: z.array(inputDescriptorSchema).optional(),
   submission_requirements: z.array(submissionRequirementSchema).optional(),
-});
+}) as z.ZodType<PresentationDefinitionJSON>;
 
 /**
  * Type of a PresentationDefinition JSON object.
  */
-export type PresentationDefinitionJSON = z.infer<
-  typeof presentationDefinitionSchema
->;
+export type PresentationDefinitionJSON = {
+  id: string;
+  name?: string;
+  purpose?: string;
+  format?: FormatJSON;
+  input_descriptors?: InputDescriptorJSON[];
+  submission_requirements?: SubmissionRequirementJSON[];
+};
 
 /**
  * Represents a presentation definition.

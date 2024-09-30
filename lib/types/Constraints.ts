@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 import { z } from 'zod';
-import { FieldConstraint, fieldConstraintSchema } from './FieldConstraint';
+import {
+  FieldConstraint,
+  FieldConstraintJSON,
+  fieldConstraintSchema,
+} from './FieldConstraint';
 import { NonEmptySet, createNonEmptySetSchema } from './NonEmptySet';
 
 /**
@@ -67,7 +71,7 @@ export const limitDisclosureSchema = z.enum(['required', 'preferred']);
 export const constraintsSchema = z.object({
   fields: fieldsSchema.optional(),
   limit_disclosure: limitDisclosureSchema.optional(),
-});
+}) as z.ZodType<ConstraintsJSON>;
 
 /**
  * Type of a set of FieldConstraint.
@@ -76,7 +80,7 @@ export type FieldConstraintSet = NonEmptySet<FieldConstraint>;
 /**
  * Type of a set of FieldConstraintJSON.
  */
-export type FieldConstraintJSONSet = z.infer<typeof fieldsSchema>;
+export type FieldConstraintJSONSet = FieldConstraintJSON[];
 /**
  * Type of a limit disclosure value.
  */
@@ -84,7 +88,10 @@ export type LimitDisclosureValue = z.infer<typeof limitDisclosureSchema>;
 /**
  * Type of a Constraints JSON object.
  */
-export type ConstraintsJSON = z.infer<typeof constraintsSchema>;
+export type ConstraintsJSON = {
+  fields?: FieldConstraintJSONSet;
+  limit_disclosure?: LimitDisclosureValue;
+};
 
 /**
  * Interface for Constraints.

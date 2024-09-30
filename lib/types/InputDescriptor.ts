@@ -20,8 +20,8 @@ import {
 } from './InputDescriptorId';
 import { Name, nameSchema } from './Name';
 import { Purpose, purposeSchema } from './Purpose';
-import { Format, formatSchema } from './Format';
-import { Constraints, constraintsSchema } from './Constraints';
+import { Format, FormatJSON, formatSchema } from './Format';
+import { Constraints, ConstraintsJSON, constraintsSchema } from './Constraints';
 import { Group, groupSchema } from './Group';
 
 /**
@@ -41,12 +41,19 @@ export const inputDescriptorSchema = z.object({
   format: formatSchema.optional(),
   constraints: constraintsSchema,
   group: z.array(groupSchema).optional(),
-});
+}) as z.ZodType<InputDescriptorJSON>;
 
 /**
  * Type of InputDescriptor JSON
  */
-export type InputDescriptorJSON = z.infer<typeof inputDescriptorSchema>;
+export type InputDescriptorJSON = {
+  id: string;
+  name?: string;
+  purpose?: string;
+  format?: FormatJSON;
+  constraints: ConstraintsJSON;
+  group?: string[];
+};
 
 /**
  * Represents an InputDescriptor

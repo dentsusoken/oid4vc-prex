@@ -20,6 +20,7 @@ import { idSchema, Id } from './Id';
 import { nameSchema, Name } from './Name';
 import { purposeSchema, Purpose } from './Purpose';
 import { filterSchema, Filter } from './Filter';
+import { JSONSchema } from '.';
 
 /**
  * Zod schema for a path in a FieldConstraint.
@@ -71,7 +72,7 @@ export const fieldConstraintSchema = z.object({
   filter: filterSchema.optional(),
   optional: z.boolean().optional(),
   intent_to_retain: z.boolean().optional(),
-});
+}) as z.ZodType<FieldConstraintJSON>;
 
 /**
  * Type of a Path.
@@ -81,7 +82,15 @@ export type Path = z.infer<typeof pathSchema>;
 /**
  * Type of a FieldConstraint JSON object.
  */
-export type FieldConstraintJSON = z.infer<typeof fieldConstraintSchema>;
+export type FieldConstraintJSON = {
+  path?: Path;
+  id?: string;
+  name?: string;
+  purpose?: string;
+  filter?: JSONSchema;
+  optional?: boolean;
+  intent_to_retain?: boolean;
+};
 
 /**
  * Represents a item of constraints property of Input Descriptor.
