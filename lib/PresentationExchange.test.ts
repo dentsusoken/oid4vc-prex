@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PresentationExchange } from './PresentationExchange';
-import { Result } from './kotlin';
+import { Result } from 'oid4vc-core/utils';
 import { PresentationSubmission } from './types';
 
 describe('PresentationExchange', () => {
