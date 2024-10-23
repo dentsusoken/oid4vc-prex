@@ -17,7 +17,7 @@ import {
   // PresentationDefinition,
   PresentationSubmission,
 } from './types';
-import { Result } from './kotlin';
+import { Result } from 'oid4vc-core/utils';
 
 export interface JsonParser {
   /**

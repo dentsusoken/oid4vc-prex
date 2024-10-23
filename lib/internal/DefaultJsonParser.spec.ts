@@ -128,7 +128,7 @@ describe('DefaultJsonParser', () => {
           jsonStr
         );
 
-        expect(result.isSuccess).toBe(true);
+        expect(result.isSuccess()).toBe(true);
 
         const ps = result.getOrThrow();
         expect(ps.id.value).toBe('aaaa');
@@ -162,7 +162,7 @@ describe('DefaultJsonParser', () => {
           stream
         );
 
-        expect(result.isSuccess).toBe(true);
+        expect(result.isSuccess()).toBe(true);
 
         const ps = result.getOrThrow();
         expect(ps.id.value).toBe('aaaa');
@@ -191,7 +191,7 @@ describe('DefaultJsonParser', () => {
         ],
       };
       const result = await mapToPS(json);
-      expect(result.isSuccess).toBe(true);
+      expect(result.isSuccess()).toBe(true);
     });
 
     it('should Result<PresentationSubmission>.isSuccess === true and get PresentationSubmission', async () => {
@@ -207,7 +207,7 @@ describe('DefaultJsonParser', () => {
         ],
       };
       const result = await mapToPS(json);
-      expect(result.isSuccess).toBe(true);
+      expect(result.isSuccess()).toBe(true);
     });
 
     // it('should Result<PresentationSubmission>.isFailure === true and get PresentationSubmission', async () => {

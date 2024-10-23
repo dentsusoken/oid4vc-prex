@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { JSONPath } from 'jsonpath-plus';
-import { runCatching } from './kotlin';
+import { runCatching } from 'oid4vc-core/utils';
 
 /**
  * JSON Path related operations
@@ -24,7 +24,7 @@ export class JsonPathOps {
    * Checks that the provided [path][String] is JSON Path
    */
   static isValid(path: string): boolean {
-    return toJsonPath(path).isSuccess;
+    return toJsonPath(path).isSuccess();
   }
 
   /**
