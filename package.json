@@ -29,7 +29,6 @@
     "build": "vite build && tsc",
     "test": "vitest",
     "lint": "eslint ./lib --ext .ts",
-    "prepare": "npm run build",
     "link": "npm install && npm run build && npm link"
   },
   "devDependencies": {
