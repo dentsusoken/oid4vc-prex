@@ -14,7 +14,7 @@ describe('JsonPathOps', () => {
       const json = '{"store":{"book":[{"author":"John Smith"}]}}';
       const jsonPath = '$.store.book[*].author';
       expect(JsonPathOps.getJsonAtPath(jsonPath, json)).toEqual(
-        '["John Smith"]'
+        '["John Smith"]',
       );
     });
   });
@@ -23,7 +23,7 @@ describe('JsonPathOps', () => {
 describe('toJsonPath', () => {
   it('should return the JSONPath object for a valid path', () => {
     const path = '$.store.book[*].author';
-    expect(toJsonPath(path).isSuccess).toBe(true);
+    expect(toJsonPath(path).isSuccess()).toBe(true);
   });
 });
 
