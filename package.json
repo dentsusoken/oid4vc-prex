@@ -1,10 +1,24 @@
 {
   "name": "@vecrea/oid4vc-prex",
   "version": "0.1.0",
+  "description": "A TypeScript library for handling OpenID for Verifiable Credentials (OID4VC) Presentation Exchange operations",
+  "keywords": [
+    "oid4vc",
+    "presentation-exchange",
+    "verifiable-credentials",
+    "typescript",
+    "json-path",
+    "openid"
+  ],
+  "author": "European Commission",
   "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/dentsusoken/oid4vc-prex"
+  },
+  "homepage": "https://github.com/dentsusoken/oid4vc-prex#readme",
+  "bugs": {
+    "url": "https://github.com/dentsusoken/oid4vc-prex/issues"
   },
   "files": [
     "dist"
@@ -29,7 +43,8 @@
     "test": "vitest --run",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ./lib --ext .ts",
-    "link": "npm install && npm run build && npm link"
+    "link": "npm install && npm run build && npm link",
+    "prepublishOnly": "npm test && npm run build"
   },
   "license": "Apache-2.0",
   "devDependencies": {
