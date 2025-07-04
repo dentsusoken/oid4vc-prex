@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { PresentationExchange } from './PresentationExchange';
-import { Result } from 'oid4vc-core/utils';
-import { PresentationSubmission } from './types';
+import { PresentationExchange } from '../PresentationExchange';
+import { Result } from '@vecrea/oid4vc-core/utils';
+import { PresentationSubmission } from '../types';
 
 describe('PresentationExchange', () => {
   describe('jsonParse', () => {

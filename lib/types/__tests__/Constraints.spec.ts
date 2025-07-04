@@ -4,8 +4,8 @@ import {
   fieldsSchema,
   limitDisclosureSchema,
   constraintsSchema,
-} from './Constraints';
-import { FieldConstraint } from './FieldConstraint';
+} from '../Constraints';
+import { FieldConstraint } from '../FieldConstraint';
 
 describe('Constraints', () => {
   describe('fieldsSchema', () => {

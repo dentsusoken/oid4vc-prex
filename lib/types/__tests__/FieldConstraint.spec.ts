@@ -3,11 +3,11 @@ import {
   pathSchema,
   fieldConstraintSchema,
   FieldConstraint,
-} from './FieldConstraint';
-import { Id } from './Id';
-import { Name } from './Name';
-import { Purpose } from './Purpose';
-import { Filter } from './Filter';
+} from '../FieldConstraint';
+import { Id } from '../Id';
+import { Name } from '../Name';
+import { Purpose } from '../Purpose';
+import { Filter } from '../Filter';
 
 describe('FieldConstraint', () => {
   describe('pathSchema', () => {

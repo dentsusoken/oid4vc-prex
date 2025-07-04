@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Name, nameSchema } from './Name';
+import { Name, nameSchema } from '../Name';
 
 describe('Name', () => {
   describe('constructor', () => {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { DescriptorMap, descriptorMapSchema } from './DescriptorMap';
-import basicPS from '../../mock-data/presentation-submission/basic-example.json';
-import { InputDescriptorId } from './InputDescriptorId';
-import { JsonPath } from './JsonPath';
+import { DescriptorMap, descriptorMapSchema } from '../DescriptorMap';
+import basicPS from '../../../mock-data/presentation-submission/basic-example.json';
+import { InputDescriptorId } from '../InputDescriptorId';
+import { JsonPath } from '../JsonPath';
 
 const descriptor_map = basicPS.descriptor_map[3];
 

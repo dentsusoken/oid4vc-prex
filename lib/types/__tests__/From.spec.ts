@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { From, fromGroupSchema, fromNestedSchema, fromSchema } from './From';
-import { Group } from './Group';
+import { From, fromGroupSchema, fromNestedSchema, fromSchema } from '../From';
+import { Group } from '../Group';
 
 describe('From', () => {
   describe('fromGroupSchema', () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Purpose, purposeSchema } from './Purpose';
+import { Purpose, purposeSchema } from '../Purpose';
 describe('Purpose', () => {
   describe('constructor', () => {
     it('should create instance', () => {

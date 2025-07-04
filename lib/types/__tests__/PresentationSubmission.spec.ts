@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { DescriptorMap } from './DescriptorMap';
+import { DescriptorMap } from '../DescriptorMap';
 import {
   PresentationSubmission,
   presentationSubmissionSchema,
-} from './PresentationSubmission';
-import basicPS from '../../mock-data/presentation-submission/basic-example.json';
-import { InputDescriptorId } from './InputDescriptorId';
-import { JsonPath } from './JsonPath';
+} from '../PresentationSubmission';
+import basicPS from '../../../mock-data/presentation-submission/basic-example.json';
+import { InputDescriptorId } from '../InputDescriptorId';
+import { JsonPath } from '../JsonPath';
 
 describe('PresentationSubmission', () => {
   describe('presentationSubmissionSchema', () => {

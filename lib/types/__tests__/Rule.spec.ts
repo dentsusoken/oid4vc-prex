@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Rule, allSchema, pickSchema, ruleSchema } from './Rule';
+import { Rule, allSchema, pickSchema, ruleSchema } from '../Rule';
 
 describe('Rule', () => {
   describe('allSchema', () => {

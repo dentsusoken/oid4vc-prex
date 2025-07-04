@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { JsonPath, jsonPathSchema } from './JsonPath';
-import { JsonPathOps } from '../JsonPathOps';
+import { JsonPath, jsonPathSchema } from '../JsonPath';
+import { JsonPathOps } from '../../JsonPathOps';
 
 describe('JsonPath', () => {
   describe('fromString', () => {

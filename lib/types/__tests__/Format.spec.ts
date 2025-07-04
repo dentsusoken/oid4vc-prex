@@ -4,7 +4,7 @@ import {
   formatJSONClaimsSchema,
   formatSchema,
   Format,
-} from './Format';
+} from '../Format';
 
 describe('Format', () => {
   describe('claimFormatSchema', () => {

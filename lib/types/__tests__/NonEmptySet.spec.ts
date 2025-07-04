@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NonEmptySet, createNonEmptySetSchema } from './NonEmptySet';
+import { NonEmptySet, createNonEmptySetSchema } from '../NonEmptySet';
 import { z } from 'zod';
 
 describe('NonEmptySet', () => {

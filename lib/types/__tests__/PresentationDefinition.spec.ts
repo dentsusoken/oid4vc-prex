@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
   PresentationDefinition,
   presentationDefinitionSchema,
-} from './PresentationDefinition';
-import { InputDescriptor } from './InputDescriptor';
-import { Id } from './Id';
-import basicPD from '../../mock-data/presentation-definition/basic-example.json';
-import mDLPD from '../../mock-data/presentation-definition/mDL-example.json';
+} from '../PresentationDefinition';
+import { InputDescriptor } from '../InputDescriptor';
+import { Id } from '../Id';
+import basicPD from '../../../mock-data/presentation-definition/basic-example.json';
+import mDLPD from '../../../mock-data/presentation-definition/mDL-example.json';
 
 describe('PresentationDefinition', () => {
   describe('presentationDefinitionSchema', () => {

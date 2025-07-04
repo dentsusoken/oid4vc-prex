@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { SubmissionRequirement } from './SubmissionRequirement';
-import { Rule } from './Rule';
-import { From } from './From';
-import { Group } from './Group';
+import { SubmissionRequirement } from '../SubmissionRequirement';
+import { Rule } from '../Rule';
+import { From } from '../From';
+import { Group } from '../Group';
 
 describe('SubmissionRequirement', () => {
   describe('constructor', () => {

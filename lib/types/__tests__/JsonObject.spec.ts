@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { jsonObjectSchema } from './JsonObject';
+import { jsonObjectSchema } from '../JsonObject';
 
 describe('JsonObject', () => {
   it('should be a JSON object with string keys and unknown values', () => {

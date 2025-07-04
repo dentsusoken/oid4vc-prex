@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { InputDescriptor, inputDescriptorSchema } from './InputDescriptor';
-import { InputDescriptorId } from './InputDescriptorId';
-import { Constraints } from './Constraints';
+import { InputDescriptor, inputDescriptorSchema } from '../InputDescriptor';
+import { InputDescriptorId } from '../InputDescriptorId';
+import { Constraints } from '../Constraints';
 
 describe('InputDescriptor', () => {
   describe('constructor', () => {

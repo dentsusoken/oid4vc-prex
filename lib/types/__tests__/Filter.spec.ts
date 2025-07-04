@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { filterSchema, Filter } from './Filter';
-import { JSONSchema7, validate } from 'json-schema';
+import { filterSchema, Filter } from '../Filter';
+import { JSONSchema7 } from 'json-schema';
 
 describe('Filter', () => {
   describe('filterSchema', () => {

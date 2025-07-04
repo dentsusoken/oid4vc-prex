@@ -1,4 +1,4 @@
-import { JsonPathOps, toJsonPath, toJsonString } from './JsonPathOps';
+import { JsonPathOps, toJsonPath, toJsonString } from '../JsonPathOps';
 import { describe, it, expect } from 'vitest';
 
 describe('JsonPathOps', () => {
@@ -14,7 +14,7 @@ describe('JsonPathOps', () => {
       const json = '{"store":{"book":[{"author":"John Smith"}]}}';
       const jsonPath = '$.store.book[*].author';
       expect(JsonPathOps.getJsonAtPath(jsonPath, json)).toEqual(
-        '["John Smith"]',
+        '["John Smith"]'
       );
     });
   });

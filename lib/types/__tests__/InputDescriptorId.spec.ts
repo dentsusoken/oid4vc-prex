@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   InputDescriptorId,
   inputDescriptorIdSchema,
-} from './InputDescriptorId';
+} from '../InputDescriptorId';
 
 describe('InputDescriptorId', () => {
   describe('constructor', () => {
