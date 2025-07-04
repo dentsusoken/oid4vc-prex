@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { JSONPath } from 'jsonpath-plus';
-import { runCatching } from 'oid4vc-core/utils';
+import { runCatching } from '@vecrea/oid4vc-core/utils';
 
 /**
  * JSON Path related operations

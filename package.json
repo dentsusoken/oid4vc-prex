@@ -27,7 +27,8 @@
   },
   "scripts": {
     "build": "vite build && tsc",
-    "test": "vitest",
+    "test": "vitest --run",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint ./lib --ext .ts",
     "link": "npm install && npm run build && npm link"
   },
@@ -45,5 +46,8 @@
     "jsonpath-plus": "^10.1.0",
     "uuid": "^10.0.0",
     "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "@vecrea/oid4vc-core": "^0.1.0"
   }
 }

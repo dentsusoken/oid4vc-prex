@@ -5,7 +5,11 @@ export default defineConfig({
     lib: {
       entry: './lib/index.ts',
       name: 'oid4vc-prex',
-      fileName: 'index',
+      formats: ['es', 'cjs'],
+      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'cjs'}`,
+    },
+    rollupOptions: {
+      external: ['@vecrea/oid4vc-core'],
     },
   },
 });

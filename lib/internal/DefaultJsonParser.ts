@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { JsonParser } from '../JsonParser';
-import { Result, runCatching } from 'oid4vc-core/utils';
+import { Result, runCatching } from '@vecrea/oid4vc-core/utils';
 import {
   JsonObject,
   PresentationSubmission,
